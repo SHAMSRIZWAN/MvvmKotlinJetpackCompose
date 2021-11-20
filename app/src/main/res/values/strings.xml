@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">MvvmKotlinJetpackCompose</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="login_title">Open a new door of opportunities with \n new well designed Liqrcoin.</string>
+    <string name="acount_no">Email Address</string>
+    <string name="sign_in">Sign In</string>
+    <string name="password">Password</string>
+    <string name="hyper_link">Forgot Password ?  Registration</string>
+
+    <string name="no_internet">Please check your internet connection</string>
+    <string name="network_error">Network error, could not get data,please try again!</string>
+    <string name="invalid_username">Not a valid Email !</string>
+    <string name="invalid_password">Not a valid Password !</string>
+    <string name="invalid_username_and_password">please Enter valid username and password</string>
+    <string name="error">Message</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="scan_and_pay">Scan</string>
+    <string name="title_activity_coming_soon">ComingSoonActivity</string>
+    <string name="upi">Upi</string>
+    <string name="kbit">Kbit</string>
+    <string name="passbook">passbook</string>
+    <string name="deposit">deposit</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="logout">Logout</string>
+    <string name="upi_id">Upi Id</string>
+    <string name="amount">Amount</string>
+    <string name="next">Next</string>
+    <string name="invalid_upi">Invalid Upi</string>
+    <string name="invalid_amnt">Invalid Amount</string>
+    <string name="details">Details</string>
+    <string name="liqrDeduction">LiqrDeduction</string>
+    <string name="serviceCharge">Service Charge</string>
+    <string name="totalDeduction">Total Deduction</string>
+    <string name="insufficient_amount">Insufficient Amount, Please add liqr in Wallet.</string>
+    <string name="send_otp">Send Otp</string>
+    <string name="please_enter_otp">Please Enter Otp</string>
+    <string name="something_went_wrong">Something went wrong, please try again later !</string>
+    <string name="enter_otp">Enter Otp</string>
+    <string name="pay">Pay</string>
+    <string name="transaction_failed">Transaction Failed</string>
+    <string name="transaction_processed">Transaction Processed !</string>
+    <string name="transaction_pending">Transaction Pending !</string>
+    <string name="invalid_otp">Invalid Otp</string>
+
+</resources>

@@ -1,0 +1,9 @@
+{
+    "status": true,
+    "message": "User login successful",
+    "data": {
+        "userId": "suorizwansayyed786@gmail.com",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InN1b3JpendhbnNheXllZDc4NkBnbWFpbC5jb20iLCJuYmYiOjE2MzY3MTAwNDcsImV4cCI6MTY0NDQ4NjA0NywiaWF0IjoxNjM2NzEwMDQ3fQ._Nbe9szUM6JbPaO-DEZObTTzmyk7GujJUwNHhuM5j8c",
+        "userType": "User"
+    }
+}
