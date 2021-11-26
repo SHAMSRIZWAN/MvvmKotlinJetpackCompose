@@ -1,14 +1,18 @@
 package com.example.mvvmKotlinJetpackCompose.ui.base
 
 import androidx.annotation.VisibleForTesting
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mvvmKotlinJetpackCompose.data.network.DataError
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
+import com.example.mvvmKotlinJetpackCompose.util.SOMETHING_WENT_WRONG
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 open class BaseViewModel<R : BaseRepository>(
     private val repository: R,
@@ -16,12 +20,19 @@ open class BaseViewModel<R : BaseRepository>(
 ) : ViewModel() {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val showDialogLoadingPrivate= MutableLiveData(false)
+    val showDialogLoadingPrivate = MutableLiveData(false)
 
-    val showErrorDialog = MutableLiveData<Resource<String>>()
+    val showMessageDialog = MutableLiveData<Resource<String>>()
 
     private val onErrorDialogDissmissPrivate = MutableLiveData<Resource<Boolean>>()
     val onErrorDialogDismiss: LiveData<Resource<Boolean>> get() = onErrorDialogDissmissPrivate
+
+    protected val exceptionHandler = CoroutineExceptionHandler { context, exception ->
+        showMessageDialog(DataError(SOMETHING_WENT_WRONG))
+        hideLoading()
+
+    }
+
 
     fun isLoading(): Boolean {
         return showDialogLoadingPrivate.value!!
@@ -50,10 +61,19 @@ open class BaseViewModel<R : BaseRepository>(
     }
 
     fun showMessageDialog(dataError: DataError<String>) {
-        showErrorDialog.value = dataError
+        showMessageDialog.value = dataError
     }
 
-    fun onErrorDialogDismiss(value: Success<Boolean>) {
-        onErrorDialogDissmissPrivate.value = value
+    fun showPostMessageDialog(dataError: DataError<String>) {
+        showMessageDialog.value = dataError
     }
+
+    fun hideMessageDialog(success: Success<String>) {
+        showMessageDialog.value = success
+
+    }
+
+
+
 }
+

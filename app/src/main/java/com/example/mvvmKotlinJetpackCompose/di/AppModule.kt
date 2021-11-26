@@ -9,7 +9,7 @@ import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
 import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardRepo
 import com.example.mvvmKotlinJetpackCompose.ui.login.RegistrationRepo
 import com.example.mvvmKotlinJetpackCompose.util.PREF_NAME
-import com.example.mvvmKotlinJetpackCompose.util.coroutines.AppDispatcher
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.AppDispatcherProvider
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import dagger.Provides
 import dagger.Module
@@ -60,8 +60,8 @@ import javax.inject.Singleton
 
     @Provides
     @Singleton
-    fun provideDispatcher(dispatcher: AppDispatcher): DispatcherProvider {
-    return dispatcher
+    fun provideDispatcher(dispatcherProvider: AppDispatcherProvider): DispatcherProvider {
+    return dispatcherProvider
     }
 
 

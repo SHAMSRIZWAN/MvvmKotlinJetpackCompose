@@ -3,7 +3,7 @@ package com.example.mvvmKotlinJetpackCompose.data.prefs
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
 
 
- interface PreferencesHelper {
+interface PreferencesHelper {
 
     suspend fun getCurrentUserLoggedInMode(): Int?
 
@@ -28,7 +28,22 @@ import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
     fun getAccessToken(): String?
 
     fun setAccessToken(accessToken: String?)
+    fun setUserLoggedIn(
+        userId: String,
+        userName: String,
+        email: String,
+        accessToken: String,
+        profile: String = ""
+    )
 
+    fun updateUserInfo(
+        accessToken: String?,
+        userId: String?,
+        loggedInMode: LoggedInMode,
+        userName: String?,
+        email: String?,
+        profilePicPath: String?)
 
+    fun clearAll()
 
 }

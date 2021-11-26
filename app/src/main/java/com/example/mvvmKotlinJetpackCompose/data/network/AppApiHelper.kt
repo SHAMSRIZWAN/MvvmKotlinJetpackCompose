@@ -1,11 +1,13 @@
 package com.example.mvvmKotlinJetpackCompose.data.network
 
 import android.content.Context
-import com.example.mvvmKotlinJetpackCompose.data.network.model.*
-import com.example.mvvmKotlinJetpackCompose.error.NETWORK_ERROR
-import com.example.mvvmKotlinJetpackCompose.error.NO_INTERNET_CONNECTION
-import com.example.mvvmKotlinJetpackCompose.util.NetworkUtils
+import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
+import com.example.mvvmKotlinJetpackCompose.data.network.model.Data
+import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginRequest
+import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
+import com.example.mvvmKotlinJetpackCompose.util.*
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
@@ -26,87 +28,52 @@ class AppApiHelper @Inject constructor(
 
     override fun updateToken(token: String) {
         serviceGenerator.protectedApiHeader = getApiHeader().protectedApiHeader.apply {
-            accessToken=token
+            accessToken = token
         }
 
     }
 
 
-    override suspend fun login(email: String, password: String): Resource<LoginResponse> {
-        val service = serviceGenerator.createService(Service::class.java)
-
-        val request = LoginRequest(email, password, "", "")
-
-        return when (val responseBodyPojo = processCall { service.login(request) }
-
-        ) {
-            is LoginResponse -> Success(data = responseBodyPojo)
-
-            else -> DataError(responseBodyPojo as String)
-        }
-
-
-    }
-
-    override suspend fun getSummary(upi: String, amount: String): Resource<SummaryReponse> {
-
-
-        serviceGenerator.protectedApiHeader = getApiHeader().protectedApiHeader
-
-        val service = serviceGenerator.createService(Service::class.java)
-
-        return when (val response = processCall { service.getSummary(amount) }) {
-            is SummaryReponse -> Success(data = response)
-
-            else -> DataError(response as String)
-        }
+    override fun login(email: String, password: String): Resource<LoginResponse> {
+//        val service = serviceGenerator.createService(Service::class.java)
+//
+//        val request = LoginRequest(email, password, "", "")
+//
+//        return when (val responseBodyPojo = processCall { service.login(request) }
+//        ) {
+//            is LoginResponse -> Success(data = responseBodyPojo)
+//
+//            else -> DataError(responseBodyPojo as String)
+//        }
+        val data = Data(
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InN1b3JpendhbnN" +
+                    "heXllZDc4NkBnbWFpbC5jb20iLCJuYmYiOjE2Mzc2NTE1MjMsImV4cCI6MTY0NTQyNzUyMywiaWF0" +
+                    "IjoxNjM3NjUxNTIzfQ.qKA55avNfOJMU3lHE-e88jfAVwE_T7E12cbCwXAfYAU",
+            "suorizwansayyed786@gmail.com", "User"
+        )
+        return Success(LoginResponse(data, "User login successful", true))
 
     }
 
-    override suspend fun sendOtp(pay: String): Resource<SendOtpResponse> {
-        serviceGenerator.protectedApiHeader = getApiHeader().protectedApiHeader
-        val service = serviceGenerator.createService(Service::class.java)
-
-        return when (val response = processCall { service.sendOtp(pay) }) {
-            is SendOtpResponse -> Success(data = response)
-            else -> DataError(response as String)
-        }
-    }
-
-    override suspend fun pay(
-        recName: String,
-        recMobile: String,
-        recUpi: String,
-        amount: String,
-        otp: String,
-        otpToken: String,
-    ): Resource<PayResponse> {
-
-        serviceGenerator.protectedApiHeader = getApiHeader().protectedApiHeader
-        val service = serviceGenerator.createService(Service::class.java)
-        val payRequest =
-            PayRequest(Integer.parseInt(amount), otp, otpToken, recMobile, recName, recUpi)
-
-        return when (val response = processCall {
-            service.pay(payRequest)
-        }) {
-            is PayResponse -> Success(data = response)
-            else -> DataError(response as String)
-        }
-    }
 
     override suspend fun getDashboardData(): Resource<DashboardResponse> {
+        delay(3000)
 
-        serviceGenerator.protectedApiHeader = getApiHeader().protectedApiHeader
-        val service = serviceGenerator.createService(Service::class.java)
-
-        return when (val response = processCall { service.getDashboardData() }) {
-            is DashboardResponse -> Success(response)
-            else -> DataError(response as String)
-        }
+//        serviceGenerator.protectedApiHeader = getApiHeader().protectedApiHeader
+//        val service = serviceGenerator.createService(Service::class.java)
+//
+//        return when (val response = processCall { service.getDashboardData() }) {
+//            is DashboardResponse -> Success(response)
+//            else -> DataError(response as String)
+//        }
+        val data = DashboardResponse.Data(
+            balanceINR = 6502.50, balanceLiqr = 260.10,
+            balanceUSD = 28.61, liqrToINR = 25.00, serviceCharge = 15.0, redeemBalance = 65.025000,
+        )
+        return Success(DashboardResponse(data, "success", true))
     }
 
-    private suspend fun processCall(responseCall: suspend () -> Response<*>): Any? {
+    private inline fun processCall(responseCall: () -> Response<*>): Any? {
         if (!NetworkUtils.isNetworkAvailable(context)) {
 
             return NO_INTERNET_CONNECTION
@@ -117,11 +84,20 @@ class AppApiHelper @Inject constructor(
             if (response.isSuccessful) {
                 response.body()
             } else {
-                responseCode.toString()
+                getResponseCodeString(responseCode)
             }
         } catch (e: IOException) {
             NETWORK_ERROR
         }
+    }
+
+    private fun getResponseCodeString(responseCode: Int):String {
+        if(responseCode in 400..499){
+           return  CLIENT_SIDE_ERROR
+        }else if(responseCode in 500..599){
+           return  SERVER_SIDE_ERROR
+        }
+        return SOMETHING_WENT_WRONG
     }
 
 }

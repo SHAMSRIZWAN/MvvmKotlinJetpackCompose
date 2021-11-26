@@ -1,6 +1,5 @@
 package com.example.mvvmKotlinJetpackCompose.ui.dashboard
 
-import android.net.Uri
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,18 +11,19 @@ import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
 import com.example.mvvmKotlinJetpackCompose.data.others.MenuItem
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseViewModel
 import com.example.mvvmKotlinJetpackCompose.util.SingleEvent
-import com.example.mvvmKotlinJetpackCompose.util.coroutines.AppDispatcher
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import java.net.URI
-import java.net.URL
 import javax.inject.Inject
 
 @HiltViewModel
-class DashboardViewModel @Inject constructor(repo: DashboardRepo, appDispatcher: AppDispatcher) :
+class DashboardViewModel @Inject constructor(
+    repo: DashboardRepo,
+    appDispatcher: DispatcherProvider
+) :
     BaseViewModel<DashboardRepo>(repo, appDispatcher) {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -38,29 +38,24 @@ class DashboardViewModel @Inject constructor(repo: DashboardRepo, appDispatcher:
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val logoutPrivate = MutableLiveData<SingleEvent<Resource<Boolean>>>()
-    val logout: LiveData<SingleEvent<Resource<Boolean>>> get() = logoutPrivate
+    val logoutData: LiveData<SingleEvent<Resource<Boolean>>> get() = logoutPrivate
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             showLoading()
+            viewModelScope.launch(exceptionHandler) {
 
-            flow {
-                emit(getRepo().getDashboardData())
-            }.collect {
+                getRepo().getDashboardData().collect {
+                    dashboardDataPrivate.value = it
+                }
+
+                getRepo().getUserId().collect {
+                    userIdDataPrivate.value = Success(it)
+                }
                 hideLoading()
-                dashboardDataPrivate.value = it
+
             }
 
-        }
-
-        viewModelScope.launch {
-
-            flow {
-                emit(getRepo().getUserId())
-            }.collect {
-
-                userIdDataPrivate.value = Success(it)
-            }
 
         }
 
@@ -86,14 +81,14 @@ class DashboardViewModel @Inject constructor(repo: DashboardRepo, appDispatcher:
 
     fun logout() {
 
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             flow {
                 emit(getRepo().logout())
             }.flowOn(getAppDispatcher().computation())
                 .collect {
-                    if (it.data == true) {
-                        logoutPrivate.value = SingleEvent(Success(true))
-                    }
+
+                    logoutPrivate.value = SingleEvent(Success(true))
+
                 }
 
 

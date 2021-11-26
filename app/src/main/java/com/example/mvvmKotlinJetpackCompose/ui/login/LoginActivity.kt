@@ -50,12 +50,7 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
 //        .get(registrationComponent, RegistrationComponentEntryPoint::class.java)
 //        .getRegistrationRepo()
 
-    companion object {
-        fun getActivity(context: Context): Intent {
-            return Intent(context, LoginActivity::class.java)
-        }
 
-    }
 
     @Composable
     override fun ProvideCompose() {
@@ -73,12 +68,12 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
             }
         }
 
-        LoginCompose() {
+        LoginCompose {
             TopImageAndText()
-            var txtAccountNo by remember { mutableStateOf("") }
+            var txtAccountNo by remember { mutableStateOf("suorizwansayyed786@gmail.com") }
 
             TextFieldUserName(txtAccountNo) { txtAccountNo = it }
-            var txtPass by remember { mutableStateOf("") }
+            var txtPass by remember { mutableStateOf("SuoRizwan") }
 
             TextFieldPassword(txtPass) {
                 txtPass = it
@@ -88,7 +83,6 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
                 viewModel.onSignInBtnClick(txtAccountNo.trim(),
                     txtPass.trim())
             }
-            ForgotPassWordAndRegistration()
 
 
         }
@@ -96,7 +90,7 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
     }
 
     @Composable
-    private fun RegistrationButton(onClick: () -> Unit) {
+    private fun RegistrationButton(onClick: () -> Unit={}) {
 
         Button(modifier = Modifier.width(dimensionResource(R.dimen.dp_150)),
             colors = ButtonDefaults
@@ -112,53 +106,16 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
 
     }
 
-    @Composable
-    private fun ForgotPassWordAndRegistration() {
-
-        val annotatedLinkString=getAnnotedString()
-        Text(text = annotatedLinkString,
-            color = MaterialTheme.colors.onSecondary)
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_100)))
-
-
-    }
 
     @Composable
-    private fun getAnnotedString(): AnnotatedString {
-
-        return buildAnnotatedString {
-
-            val str = stringResource(R.string.hyper_link)
-            val startIndex = str.indexOf("Registration")
-            val endIndex = startIndex + 12
-            append(str)
-            addStyle(
-                style = SpanStyle(
-                    color = Color.Blue,
-                    fontSize = 18.sp,
-                    textDecoration = TextDecoration.Underline
-                ), start = startIndex, end = endIndex
-            )
-            addStringAnnotation(
-                tag = "URL",
-                annotation = "https://github.com",
-                start = startIndex,
-                end = endIndex
-            )
-
-        }
-    }
-
-    @Composable
-    private fun TextFieldPassword(txtPass: String, setPass: (String) -> Unit) {
+    private fun TextFieldPassword(txtPass: String, setPass: (String) -> Unit={}) {
 
 
         TextField(modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .background(shape = Shapes.medium,
-                color = MaterialTheme.colors.primaryVariant),
+                color = MaterialTheme.colors.secondary),
             maxLines = 1,
             singleLine = true,
             value = txtPass,
@@ -193,7 +150,7 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
         Image(modifier = Modifier
             .padding(top = dimensionResource(id = R.dimen.dp_100))
             .size(dimensionResource(id = R.dimen.dp_100)),
-            painter = painterResource(id = R.drawable.ic_app),
+            painter = painterResource(id = R.drawable.jetpack_logo),
             contentDescription = "")
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_10)))
@@ -202,7 +159,7 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
             textAlign = TextAlign.Center,
             text = stringResource(R.string.login_title),
             style = MaterialTheme.typography.button,
-            color = MaterialTheme.colors.onSecondary)
+            color = MaterialTheme.colors.secondary)
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dp_100)))
 
@@ -210,14 +167,14 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
     }
 
     @Composable
-    private fun TextFieldUserName(txtAccountNo: String, setAcc: (String) -> Unit) {
+    private fun TextFieldUserName(txtAccountNo: String, setAcc: (String) -> Unit={}) {
 
 
         TextField(modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .background(shape = Shapes.medium,
-                color = MaterialTheme.colors.primaryVariant),
+                color = MaterialTheme.colors.secondary),
             maxLines = 1,
             singleLine = true,
             value = txtAccountNo,
@@ -246,18 +203,12 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
 
     }
 
-    fun startDashboardAcitivty() {
+    private fun startDashboardAcitivty() {
         startActivity(Intent(this, DashboardActivity::class.java))
     }
 
     @Composable
     fun LoginCompose(childrenCompose: @Composable () -> Unit) {
-
-        Box {
-            Image(modifier = Modifier.fillMaxSize(),
-                painter = painterResource(R.drawable.bg_login),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = "")
 
 
             Column(
@@ -271,7 +222,6 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
             }
 
 
-        }
 
 
     }
@@ -286,11 +236,9 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
             LoginCompose {
 
                 TopImageAndText()
-                TextFieldUserName("") { }
-                TextFieldPassword("") {}
-                RegistrationButton {}
-                ForgotPassWordAndRegistration()
-
+                TextFieldUserName("")
+                TextFieldPassword("")
+                RegistrationButton()
 
             }
 

@@ -1,42 +1,62 @@
 package com.example.mvvmKotlinJetpackCompose.ui.login
 
 import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
+import com.example.mvvmKotlinJetpackCompose.data.network.DataError
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
-import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class RegistrationRepo @Inject constructor(
     apiHelper: ApiHelper,
     preferencesHelper: PreferencesHelper,
-) :
-    BaseRepository(apiHelper, preferencesHelper) {
+) : BaseRepository(apiHelper, preferencesHelper) {
 
 
-    suspend fun login(email: String, password: String): Resource<LoginResponse> {
+    fun login(email: String, password: String): Flow<Resource<LoginResponse>> {
+        val loginResult = getApiHelper().login(email, password)
 
-     return   getApiHelper().login(email,password)
+        loginResult.data?.let {
+            if (it.status) {
+                val loginResponse = loginResult.data
+
+                if (loginResponse.status) {
+                    val userId = loginResponse.data.userId
+                    val token = loginResponse.data.token
+                    val userType = loginResponse.data.userType
+
+                    getPreferencesHelper().setUserLoggedIn(
+                        userId = userId,
+                        userName = userType,
+                        email = userId, accessToken = token
+                    )
+                    getApiHelper().updateToken(token)
+
+                }
+            } else {
+                return flow {
+                    emit(DataError(loginResult.data.message))
+                }
+            }
+        }
+
+        return flow {
+            emit(loginResult)
+        }
     }
 
-    fun  setUserLoginMode(loggedInMode: LoggedInMode) {
-        getPreferencesHelper().setCurrentUserLoggedInMode(loggedInMode)
+    suspend fun isUserLoggedIn(): Flow<Int?> {
+
+        return flow {
+            delay(3000)
+
+            emit(getPreferencesHelper().getCurrentUserLoggedInMode())
+        }
     }
 
-    suspend fun isUserLoggedIn():Int?{
-        return  getPreferencesHelper().getCurrentUserLoggedInMode()
-    }
-
-    fun setUserLoggedIn(userId:String,userName:String,email: String,accessToken:String,profile:String="") {
-
-        getPreferencesHelper().setCurrentUserId(userId)
-        getPreferencesHelper().setCurrentUserName(userName)
-        getPreferencesHelper().setCurrentUserEmail(email)
-        getPreferencesHelper().setCurrentUserProfilePicUrl(profile)
-        getPreferencesHelper().setAccessToken(accessToken)
-        getPreferencesHelper().setCurrentUserLoggedInMode(LoggedInMode.LOGGED_IN_MODE_SERVER)
-        getApiHelper().updateToken(accessToken)
-    }
 
 }

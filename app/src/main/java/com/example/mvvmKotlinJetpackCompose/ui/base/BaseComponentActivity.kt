@@ -1,6 +1,8 @@
 package com.example.mvvmKotlinJetpackCompose.ui.base
 
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,8 +30,9 @@ import com.example.mvvmKotlinJetpackCompose.ui.theme.White
 abstract class BaseComponentActivity<VM : BaseViewModel<*>> : ComponentActivity() {
 
     abstract val viewModel: VM
+
     //override in child class if you don't want to use global loading state
-    open val wantToShowCustomLoading=false
+    open val wantToShowCustomLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +63,7 @@ abstract class BaseComponentActivity<VM : BaseViewModel<*>> : ComponentActivity(
     private fun SetUpErrorDialog() {
         var dialogState = false
         var errorDescription = ""
-        val vmLoadinState = viewModel.showErrorDialog.observeAsState()
+        val vmLoadinState = viewModel.showMessageDialog.observeAsState()
         when (vmLoadinState.value) {
             is DataError -> {
                 errorDescription = (vmLoadinState.value as DataError<String>).errorDescription
@@ -117,18 +120,17 @@ abstract class BaseComponentActivity<VM : BaseViewModel<*>> : ComponentActivity(
 
             dismissButton = {
                 TextButton(
-                    modifier = Modifier.background(MaterialTheme.colors.secondary),
                     onClick = {
-                        viewModel.showErrorDialog.value = Success("")
-                        viewModel.onErrorDialogDismiss(Success(true))
-
+                        viewModel.hideMessageDialog(Success(""))
                     }) {
-                    Text("Ok",
+                    Text(
+                        "Ok",
                         style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onSecondary)
+                        color = MaterialTheme.colors.onSecondary
+                    )
                 }
             },
-            backgroundColor = MaterialTheme.colors.primary,
+            backgroundColor = MaterialTheme.colors.secondary,
             contentColor = Color.White
         )
 
@@ -140,6 +142,12 @@ abstract class BaseComponentActivity<VM : BaseViewModel<*>> : ComponentActivity(
 
     @Composable
     abstract fun ProvideComposeLightPreview()
+
+
+    inline fun <reified T : ComponentActivity> Context.startActivity(block: Intent.() -> Unit = {}) {
+
+        startActivity(Intent(this, T::class.java).apply(block))
+    }
 
 
 }

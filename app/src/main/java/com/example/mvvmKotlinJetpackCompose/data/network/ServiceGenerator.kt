@@ -14,10 +14,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val timeoutRead = 30
-private const val contenType = "Content-Type"
-private const val contenTypeValue = "application/json"
+private const val contentType = "Content-Type"
+private const val contentTypeValue = "application/json"
 private const val timeoutConnect = 30
-private const val baseUrl="https://hiicall.com/liqrCoinApi/"
+private const val baseUrl="https://your.com/Api/"
 
 @Singleton
 class ServiceGenerator  @Inject constructor(){
@@ -30,7 +30,7 @@ class ServiceGenerator  @Inject constructor(){
         val original = chain.request()
 
         val request = original.newBuilder()
-            .header(contenType, contenTypeValue)
+            .header(contentType, contentTypeValue)
             .header("Authorization", "Bearer " + protectedApiHeader.accessToken)
             .method(original.method, original.body)
             .build()
@@ -39,7 +39,7 @@ class ServiceGenerator  @Inject constructor(){
     }
 
     private val logger: HttpLoggingInterceptor
-        get() {
+      get() {
             val loggingInterceptor = HttpLoggingInterceptor()
             if (BuildConfig.DEBUG) {
                 loggingInterceptor.apply { level = HttpLoggingInterceptor.Level.BODY }

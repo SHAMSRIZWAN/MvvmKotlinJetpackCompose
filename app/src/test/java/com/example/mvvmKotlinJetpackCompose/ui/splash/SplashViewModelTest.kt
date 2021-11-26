@@ -5,8 +5,9 @@ import com.example.mvvmKotlinJetpackCompose.ui.login.RegistrationRepo
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
 import io.mockk.coEvery
 import io.mockk.mockk
-import junit.framework.Assert.assertEquals
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -18,8 +19,7 @@ class SplashViewModelTest : BaseTest<SplashViewModel, RegistrationRepo>() {
     @Before
     override fun setUp() {
         repository = mockk()
-            viewModelUnderTest = SplashViewModel(repository, testAppDispatcher)
-        testDataClassGenerator.getSummaryResponse()
+        viewModelUnderTest = SplashViewModel(repository, appDispatcher)
 
     }
 
@@ -32,15 +32,17 @@ class SplashViewModelTest : BaseTest<SplashViewModel, RegistrationRepo>() {
     fun `decideActivity, input loggedOut state ,return value 2`() {
         runBlockingTest {
             //Given
-            coEvery { repository.isUserLoggedIn() }returns LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type
+            coEvery { repository.isUserLoggedIn() } returns flow { emit( LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type) }
+
             //when
             viewModelUnderTest.decideActivity()
-            viewModelUnderTest.singleEventOpenActivity.observeForever{}//other wise value will not be updated in livedata
+            viewModelUnderTest.singleEventOpenActivity.observeForever {}//other wise value will not be updated in livedata
 
             //Then
-            val result= viewModelUnderTest.singleEventOpenActivity.value?.getContentIfNotHandled()?.data
+            val result =
+                viewModelUnderTest.singleEventOpenActivity.value?.getContentIfNotHandled()?.data
 
-            assertEquals( 2 , result)
+            assertEquals(2, result)
 
         }
 
@@ -50,19 +52,20 @@ class SplashViewModelTest : BaseTest<SplashViewModel, RegistrationRepo>() {
     @ExperimentalCoroutinesApi
     @Test
     fun `decideActivity ,input loggedIn state , return value 1`() {
-        runBlockingTest {
+        appDispatcher.testScope.runBlockingTest {
             //Given
-            coEvery { repository.isUserLoggedIn() }returns LoggedInMode.LOGGED_IN_MODE_SERVER.type
+            coEvery { repository.isUserLoggedIn() } returns flow { emit(LoggedInMode.LOGGED_IN_MODE_SERVER.type) }
             //when
             viewModelUnderTest.decideActivity()
-            viewModelUnderTest.singleEventOpenActivity.observeForever{}//other wise value will not be updated in livedata
+            viewModelUnderTest.singleEventOpenActivity.observeForever {}//other wise value will not be updated in livedata
 
             //Then
-            val result= viewModelUnderTest.singleEventOpenActivity.value?.getContentIfNotHandled()?.data
+            val result = viewModelUnderTest.singleEventOpenActivity.value?.getContentIfNotHandled()?.data
 
-            assertEquals( 1 , result)
+            assertEquals(1, result)
 
         }
+
 
     }
 
@@ -71,15 +74,16 @@ class SplashViewModelTest : BaseTest<SplashViewModel, RegistrationRepo>() {
     fun `decideActivity ,not logged in ,return value 2`() {
         runBlockingTest {
             //Given
-            coEvery { repository.isUserLoggedIn() }returns LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type
+            coEvery { repository.isUserLoggedIn() } returns flow { emit( LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type )}
             //when
             viewModelUnderTest.decideActivity()
-            viewModelUnderTest.singleEventOpenActivity.observeForever{}//other wise value will not be updated in livedata
+            viewModelUnderTest.singleEventOpenActivity.observeForever {}//other wise value will not be updated in livedata
 
             //Then
-            val result= viewModelUnderTest.singleEventOpenActivity.value?.getContentIfNotHandled()?.data
+            val result =
+                viewModelUnderTest.singleEventOpenActivity.value?.getContentIfNotHandled()?.data
 
-            assertEquals( 2 , result)
+            assertEquals(2, result)
 
         }
 

@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 
 
 private val LightColorPalette = lightColors(
-    primary = DarkPurple,
-    primaryVariant = Purple,
+    primary = DarkGray,
+    primaryVariant = Gray,
     secondary = LightPurple,
     onPrimary = Black,
     onSecondary = White,

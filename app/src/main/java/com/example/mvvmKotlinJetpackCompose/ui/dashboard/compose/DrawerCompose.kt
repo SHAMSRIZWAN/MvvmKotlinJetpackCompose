@@ -35,19 +35,17 @@ fun DrawerCompose(
 ) {
 
 
-    Column(Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colors.onSecondary)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.onSecondary)) {
         Box(contentAlignment = Alignment.Center) {
-            Image(modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp),
-                painter = painterResource(R.drawable.bg_login),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = "")
+
 
             Column(horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()) {
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.secondary)) {
 
                 Image(modifier = Modifier
                     .width(100.dp)
@@ -62,11 +60,12 @@ fun DrawerCompose(
                     style = MaterialTheme.typography.body1,
                 )
                  Text(
-                    text = "Total Liqr = "+totalLiqrCoin,
+                    text = "Total = "+totalLiqrCoin,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.onSecondary,
                     style = MaterialTheme.typography.body1,
                 )
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.dp_10)))
 
             }
 
@@ -97,10 +96,11 @@ fun DrawerCompose(
 
 @Composable
 fun DrawerItem(icon: Int, title: Int, onClick: () -> Unit) {
-    Row(Modifier
-        .fillMaxWidth()
-        .height(dimensionResource(R.dimen.dp_60))
-        .clickable { onClick() },
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(dimensionResource(R.dimen.dp_60))
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically) {
         Image(modifier = Modifier
             .width(dimensionResource(R.dimen.dp_25))

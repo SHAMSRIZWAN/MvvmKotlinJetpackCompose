@@ -24,7 +24,8 @@ class AppPreferencesHelper @Inject constructor(
 
     override fun setCurrentUserId(userId: String?) {
         val id = userId ?: NULL_INDEX
-        mPrefs.edit().putString(PREF_KEY_CURRENT_USER_ID, id).apply()
+        mPrefs.putAny(PREF_KEY_CURRENT_USER_ID, id)
+
     }
 
     override fun getCurrentUserName(): String? {
@@ -32,7 +33,8 @@ class AppPreferencesHelper @Inject constructor(
     }
 
     override fun setCurrentUserName(userName: String?) {
-        mPrefs.edit().putString(PREF_KEY_CURRENT_USER_NAME, userName).apply()
+        mPrefs.putAny(PREF_KEY_CURRENT_USER_NAME, userName)
+
     }
 
     override fun getCurrentUserEmail(): String? {
@@ -40,7 +42,8 @@ class AppPreferencesHelper @Inject constructor(
     }
 
     override fun setCurrentUserEmail(email: String?) {
-        mPrefs.edit().putString(PREF_KEY_CURRENT_USER_EMAIL, email).apply()
+        mPrefs.putAny(PREF_KEY_CURRENT_USER_EMAIL, email)
+
     }
 
     override fun getCurrentUserProfilePicUrl(): String? {
@@ -48,19 +51,18 @@ class AppPreferencesHelper @Inject constructor(
     }
 
     override fun setCurrentUserProfilePicUrl(profilePicUrl: String?) {
-        mPrefs.edit()
-            .putString(PREF_KEY_CURRENT_USER_PROFILE_PIC_URL, profilePicUrl)
-            .apply()
+
+        mPrefs.putAny(PREF_KEY_CURRENT_USER_PROFILE_PIC_URL, profilePicUrl)
+
     }
 
     override suspend fun getCurrentUserLoggedInMode(): Int {
-        return mPrefs.getInt(PREF_KEY_USER_LOGGED_IN_MODE,
-            LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type)
+        return mPrefs.getInt(PREF_KEY_USER_LOGGED_IN_MODE, LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type)
     }
 
     override fun setCurrentUserLoggedInMode(mode: LoggedInMode) {
-        mPrefs.edit().putInt(PREF_KEY_USER_LOGGED_IN_MODE, mode.type)
-            .apply()
+        mPrefs.putAny(PREF_KEY_USER_LOGGED_IN_MODE, mode.type)
+
     }
 
     override fun getAccessToken(): String? {
@@ -68,6 +70,57 @@ class AppPreferencesHelper @Inject constructor(
     }
 
     override fun setAccessToken(accessToken: String?) {
-        mPrefs.edit().putString(PREF_KEY_ACCESS_TOKEN, accessToken).apply()
+        mPrefs.putAny(PREF_KEY_ACCESS_TOKEN, accessToken)
+    }
+
+
+    override fun setUserLoggedIn(
+        userId: String,
+        userName: String,
+        email: String,
+        accessToken: String,
+        profile: String
+    ) {
+
+       setCurrentUserId(userId)
+       setCurrentUserName(userName)
+        setCurrentUserEmail(email)
+        setCurrentUserProfilePicUrl(profile)
+        setAccessToken(accessToken)
+       setCurrentUserLoggedInMode(LoggedInMode.LOGGED_IN_MODE_SERVER)
+    }
+
+    override fun updateUserInfo(
+        accessToken: String?,
+        userId: String?,
+        loggedInMode: LoggedInMode,
+        userName: String?,
+        email: String?,
+        profilePicPath: String?
+    ) {
+        setAccessToken(accessToken)
+        setCurrentUserId(userId ?:"-1")
+        setCurrentUserLoggedInMode(loggedInMode)
+        setCurrentUserName(userName)
+        setCurrentUserEmail(email)
+        setCurrentUserProfilePicUrl(profilePicPath)
+
+    }
+
+    override fun clearAll() {
+        mPrefs.edit().clear().apply()
+    }
+
+    private fun SharedPreferences.putAny(name: String, any: Any?) {
+        when (any) {
+            is String -> edit().putString(name, any).apply()
+            is Int -> edit().putInt(name, any).apply()
+            is Boolean -> edit().putBoolean(name,any).apply()
+            is Float -> edit().putFloat(name,any).apply()
+        }
+    }
+
+   private fun SharedPreferences.remove(name:String){
+        edit().remove(name).apply()
     }
 }

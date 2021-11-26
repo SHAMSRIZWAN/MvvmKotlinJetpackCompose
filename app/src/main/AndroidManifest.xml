@@ -15,11 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MvvmKotlinJetpackCompose">
-        <activity
-            android:name=".ui.comingsoon.ComingSoonActivity"
-            android:exported="false"
-            android:label="@string/title_activity_coming_soon"
-            android:theme="@style/Theme.MvvmKotlinJetpackCompose.NoActionBar" />
+
         <activity
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="false"
@@ -40,25 +36,6 @@
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.MvvmKotlinJetpackCompose.NoActionBar" />
-
-        <activity
-            android:name="com.journeyapps.barcodescanner.CaptureActivity"
-            android:permission="@android:string/paste"
-
-            android:screenOrientation="portrait"
-            tools:replace="screenOrientation" />
-
-        <activity
-            android:name=".ui.scandetail.ScannedDetailsActivity"
-            android:exported="true"
-            android:theme="@style/Theme.MvvmKotlinJetpackCompose.NoActionBar" >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
-
 
     </application>
 

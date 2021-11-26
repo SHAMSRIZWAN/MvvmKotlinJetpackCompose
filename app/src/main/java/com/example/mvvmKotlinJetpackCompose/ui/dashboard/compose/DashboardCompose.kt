@@ -28,48 +28,16 @@ import com.example.mvvmKotlinJetpackCompose.ui.theme.LiquorCoinTheme
 import kotlinx.coroutines.CoroutineScope
 
 
-@ExperimentalFoundationApi
-@Composable
-fun DashboardCompose(
-    scope: CoroutineScope,
-    scaffoldState: ScaffoldState,
-    openComingSoonActivity: (String) -> Unit,
-    menuList: List<MenuItem>,
-    startScannerActivity: (String) -> Unit,
-    logoutAction: (String) -> Unit,
-    dashboardData: MutableState<DashboardResponse.Data>,
-    userId: String,
-    contentScreen:@Composable ()->Unit
-) {
-    Scaffold(scaffoldState = scaffoldState,
-        topBar = {
-            TopBar(scope, scaffoldState, openComingSoonActivity,
-                dashboardData.value.liqrToINR) {
-                startScannerActivity(it)
-            }
-        },
-        drawerShape = RoundedCornerShape(0.dp),
-        drawerContent = {
-            DrawerCompose(scope, scaffoldState,
-                dashboardData.value.balanceLiqr.toString(),
-                userId, logoutAction)
-        }) {
-        contentScreen()
-        DashboardContent(menuList, openComingSoonActivity)
-    }
-
-}
-
 
 @ExperimentalFoundationApi
 @Composable
-fun DashboardContent(menuItems: List<MenuItem>, openActivity: (String) -> Unit) {
+fun DashboardContent(menuItems: List<MenuItem>, openActivity: (String) -> Unit={}) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Menu(menuItems, openActivity)
         Spacer(modifier = Modifier
             .height(dimensionResource(R.dimen.dp_80)))
-        Image(painter = painterResource(R.drawable.ic_app),
+        Image(painter = painterResource(R.drawable.jetpack_logo),
             modifier = Modifier
                 .width(dimensionResource(id = R.dimen.dp_145))
                 .height(dimensionResource(id = R.dimen.dp_145)),
@@ -129,36 +97,5 @@ fun MenuItemCompose(
 
     }
 
-}
-
-@ExperimentalFoundationApi
-@Preview(showBackground = true,
-    uiMode = UI_MODE_NIGHT_NO)
-@Composable
-public fun ProvideDashboardPreview() {
-    LiquorCoinTheme {
-        val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
-        val scope = rememberCoroutineScope()
-        val navController = rememberNavController()
-        DashboardCompose(scope, scaffoldState, {},
-            listOf(
-                MenuItem(R.drawable.ic_prepaid, "Prepaid"),
-                MenuItem(R.drawable.ic_postpaid, "PostPaid"),
-                MenuItem(R.drawable.ic_dtf, "Dth"),
-                MenuItem(R.drawable.ic_datacard, "DataCard"),
-                MenuItem(R.drawable.ic_gas, "Gas"),
-                MenuItem(R.drawable.ic_water, "Water"),
-                MenuItem(R.drawable.ic_electricity, "Electricity"),
-                MenuItem(R.drawable.ic_billpayment, "Bill Payment"),
-                MenuItem(R.drawable.ic_fund_recieve, "Fun receive"),
-                MenuItem(R.drawable.ic_bus, "bus"),
-                MenuItem(R.drawable.ic_flight, "flight"),
-                MenuItem(R.drawable.ic_hotel_booking, "Hotel booking"),
-            ), {}, {}, remember {
-                mutableStateOf(DashboardResponse.Data())
-            }, "",{})
-
-
-    }
 }
 

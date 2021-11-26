@@ -1,6 +1,7 @@
 package com.example.mvvmKotlinJetpackCompose.data.network
 
-import com.example.mvvmKotlinJetpackCompose.error.SOMETHING_WENT_WRONG
+import com.example.mvvmKotlinJetpackCompose.util.SOMETHING_WENT_WRONG
+
 
 sealed class Resource<T>(
     val data: T? = null,

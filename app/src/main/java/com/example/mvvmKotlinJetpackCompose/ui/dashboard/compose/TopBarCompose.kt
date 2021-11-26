@@ -27,16 +27,8 @@ import kotlinx.coroutines.launch
 fun TopBar(
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
-    openComingSoonActivity: (String) -> Unit,
-    liqrCoin: Double,
-    openActivity: (String) -> Unit,
+    coin: Double,
 ) {
-    Image(modifier = Modifier
-        .fillMaxWidth()
-        .height(dimensionResource(R.dimen.dp_145)),
-        painter = painterResource(R.drawable.bg_toolbar),
-        contentScale = ContentScale.FillBounds,
-        contentDescription = "")
 
     TopAppBar(title = {
 
@@ -44,7 +36,7 @@ fun TopBar(
             .fillMaxWidth()
             .padding(end = dimensionResource(id = R.dimen.dp_15)),
             textAlign = TextAlign.End,
-            text = "1 Liqrcoin = "+liqrCoin+" INR",
+            text = "1 coin = "+coin+" INR",
             color = MaterialTheme.colors.onSecondary,
             style = MaterialTheme.typography.subtitle2)
 
@@ -57,45 +49,10 @@ fun TopBar(
                     tint = MaterialTheme.colors.onSecondary)
             }
         },
-        backgroundColor = Color.Transparent,
+        backgroundColor = MaterialTheme.colors.secondary,
         elevation = 0.dp
     )
 
-    Column {
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.dp_75)))
-        Row {
-            val color = MaterialTheme.colors.onSecondary;
-
-            MenuItemCompose(
-                Modifier.weight(1f), R.drawable.ic_qr_code,
-                stringResource(R.string.scan_and_pay),
-                {
-                    openActivity(it)
-
-
-                }, color
-            )
-
-            MenuItemCompose(Modifier.weight(1f), R.drawable.ic_upi,
-                stringResource(R.string.upi),
-                {
-                    openComingSoonActivity(it)
-                }, color)
-
-
-
-            MenuItemCompose(Modifier.weight(1f), R.drawable.ic_passbook,
-                stringResource(R.string.passbook),
-                { openComingSoonActivity(it) }, color)
-
-            MenuItemCompose(Modifier.weight(1f), R.drawable.ic_deposit,
-                stringResource(R.string.deposit),
-                { openComingSoonActivity(it) }, color)
-
-
-        }
-
-    }
 
 }
 
@@ -106,7 +63,7 @@ fun ProvideComposeLightPreview() {
     LiquorCoinTheme {
         val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
         val scope = rememberCoroutineScope()
-        TopBar(scope, scaffoldState, {}, 20.0,{},)
+        TopBar(scope, scaffoldState, 20.0)
 
     }
 }

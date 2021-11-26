@@ -2,7 +2,7 @@
     <string name="app_name">MvvmKotlinJetpackCompose</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="login_title">Open a new door of opportunities with \n new well designed Liqrcoin.</string>
+    <string name="login_title">A demo App using kotlin, Mvvm, jetpack Compose, Unit testing.</string>
     <string name="acount_no">Email Address</string>
     <string name="sign_in">Sign In</string>
     <string name="password">Password</string>

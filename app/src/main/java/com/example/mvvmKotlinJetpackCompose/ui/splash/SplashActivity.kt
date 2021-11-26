@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -39,30 +40,30 @@ class SplashActivity : BaseComponentActivity<SplashViewModel>() {
         viewModel.decideActivity()
 
         SplashCompose {
-            BackGroundImage()
-            ImageAndAppName {
-                val loadingValue = viewModel.isLoading()
+                ImageAndAppName {
+                    val loadingValue = viewModel.isLoading()
 
-                observeEvent(viewModel.singleEventOpenActivity) {
-                    when (val result = it.getContentIfNotHandled()) {
-                        is Success -> {
-                            if (result.data == 1) {
-                                startActivity(DashboardActivity.getActivity(this@SplashActivity))
-                            } else {
-                                startActivity(LoginActivity.getActivity(this@SplashActivity))
+                    observeEvent(viewModel.singleEventOpenActivity) {
+                        when (val result = it.getContentIfNotHandled()) {
+                            is Success -> {
+                                if (result.data == 1) {
+                                    startActivity<DashboardActivity>()
+                                } else {
+                                    startActivity<LoginActivity>()
+
+                                }
 
                             }
 
                         }
-
                     }
-                }
-                if (loadingValue) {
+                    if (loadingValue) {
 
-                    CircularProgressIndicator()
+                        CircularProgressIndicator()
+                    }
+
                 }
 
-            }
         }
     }
 
@@ -74,25 +75,14 @@ class SplashActivity : BaseComponentActivity<SplashViewModel>() {
             ChildrenCompose()
 
         }
-
-
     }
 
-    @Composable
-    private fun BackGroundImage() {
-        Image(modifier = Modifier.fillMaxSize(),
-            painter = painterResource(R.drawable.bg_img),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = "")
-
-
-    }
 
     @Composable
     private fun ImageAndAppName(showLoading: @Composable () -> Unit) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painter = painterResource(R.drawable.ic_app),
+            Image(painter = painterResource(R.drawable.jetpack_logo),
                 modifier = Modifier
                     .padding(top = dimensionResource(id = R.dimen.dp_100))
                     .width(dimensionResource(id = R.dimen.dp_120))
@@ -102,7 +92,7 @@ class SplashActivity : BaseComponentActivity<SplashViewModel>() {
             Text(modifier = Modifier.width(IntrinsicSize.Max),
                 text = stringResource(id = R.string.app_name),
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colors.onSecondary,
+                color = MaterialTheme.colors.secondary,
                 style = MaterialTheme.typography.h6)
 
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.dp_20)))
@@ -121,10 +111,7 @@ class SplashActivity : BaseComponentActivity<SplashViewModel>() {
         LiquorCoinTheme {
 
             SplashCompose {
-                BackGroundImage()
                 ImageAndAppName {
-
-
                     CircularProgressIndicator()
 
                 }

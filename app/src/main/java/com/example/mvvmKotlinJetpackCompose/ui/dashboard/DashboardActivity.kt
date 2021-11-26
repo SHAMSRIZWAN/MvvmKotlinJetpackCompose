@@ -1,19 +1,12 @@
 package com.example.mvvmKotlinJetpackCompose.ui.dashboard
 
-import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.net.Uri
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -39,12 +32,7 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
 
     override val viewModel: DashboardViewModel by viewModels()
 
-    companion object {
-        fun getActivity(context: Context): Intent {
-            return Intent(context, DashboardActivity::class.java)
-        }
 
-    }
 
     @ExperimentalFoundationApi
     @Composable
@@ -78,11 +66,11 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
             }
         }
 
-        observe(viewModel.logout) {
+        observe(viewModel.logoutData) {
             when (it.getContentIfNotHandled()) {
                 is DataError -> println()
                 is Success -> {
-                    startActivity(LoginActivity.getActivity(this))
+                    startActivity<LoginActivity>()
                     finish()
                 }
             }
@@ -152,7 +140,7 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
         dashboardData: DashboardResponse.Data,
         userId: String,
         currentRoute: String?,
-        onItemClick: (String)->Unit,
+        onItemClick: (String)->Unit={},
         SetupNavHost: @Composable () -> Unit,
     ) {
         val scaffoldState =
@@ -163,12 +151,7 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
             topBar = {
                 TopBar(scope,
                     scaffoldState,
-                    {
-
-                    },
-                    dashboardData.liqrToINR) {
-
-                }
+                    dashboardData.liqrToINR)
             },
             drawerShape = RoundedCornerShape(0.dp),
             drawerContent = {
@@ -219,10 +202,9 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
     @Composable
     override fun ProvideComposeLightPreview() {
 
-        //jetpack compose compiler making it topbar icon and text black
-        //but its white
+        //jetpack compose compiler sometimes shows different colors
         SetUpDashboardCompose(DashboardResponse.Data(), "userId",
-            "",{}) {
+            "") {
 
             DashboardContent(listOf(
                 MenuItem(R.drawable.ic_prepaid, "Prepaid"),
@@ -237,9 +219,7 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
                 MenuItem(R.drawable.ic_bus, "bus"),
                 MenuItem(R.drawable.ic_flight, "flight"),
                 MenuItem(R.drawable.ic_hotel_booking, "Hotel booking"),
-            )) {
-
-            }
+            ))
         }
     }
 
