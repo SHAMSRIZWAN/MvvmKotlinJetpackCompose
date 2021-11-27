@@ -1,4 +1,4 @@
-package com.finance.expensetracker.util.coroutines
+package com.example.mvvmKotlinJetpackCompose.util.coroutines
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

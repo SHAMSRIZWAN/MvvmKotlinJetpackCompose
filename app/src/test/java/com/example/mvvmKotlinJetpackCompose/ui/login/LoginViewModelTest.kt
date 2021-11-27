@@ -76,7 +76,7 @@ class LoginViewModelTest : BaseTest<LoginViewModel, RegistrationRepo>() {
         //Given
        coEvery {
             repository.login(any(), any())
-        } returns flow { emit(testDataClassGenerator.getSuccessFlowLoginResponse()) }
+        } returns flow { emit(testDataClassGenerator.getSuccessLoginResponse()) }
 
 
         //when
@@ -86,7 +86,7 @@ class LoginViewModelTest : BaseTest<LoginViewModel, RegistrationRepo>() {
         //then
         val loginResponse = viewModelUnderTest.loginResponsePrivate.value!!.data
 
-        val expectedResponse = testDataClassGenerator.getSuccessFlowLoginResponse().data
+        val expectedResponse = testDataClassGenerator.getSuccessLoginResponse().data
 
 
         assertEquals(expectedResponse, loginResponse)

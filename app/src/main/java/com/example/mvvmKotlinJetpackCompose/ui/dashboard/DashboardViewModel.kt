@@ -41,25 +41,26 @@ class DashboardViewModel @Inject constructor(
     val logoutData: LiveData<SingleEvent<Resource<Boolean>>> get() = logoutPrivate
 
     init {
+
+        getDashBoarData()
+
+
+    }
+
+     fun getDashBoarData() {
+
         viewModelScope.launch(exceptionHandler) {
             showLoading()
-            viewModelScope.launch(exceptionHandler) {
 
-                getRepo().getDashboardData().collect {
-                    dashboardDataPrivate.value = it
-                }
+            val dashboardData = getRepo().getDashboardData()
+            dashboardDataPrivate.value = dashboardData
 
-                getRepo().getUserId().collect {
-                    userIdDataPrivate.value = Success(it)
-                }
-                hideLoading()
+            val userId = getRepo().getUserId()
+            userIdDataPrivate.value = Success(userId)
 
-            }
-
+            hideLoading()
 
         }
-
-
     }
 
 

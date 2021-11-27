@@ -20,11 +20,9 @@ class DashboardRepo @Inject constructor(
         setUserAsLoggedOut()
     }
 
-    suspend fun getDashboardData(): Flow<Resource<DashboardResponse>> {
+    suspend fun getDashboardData(): Resource<DashboardResponse> {
 
-        return flow {
-            emit(getApiHelper().getDashboardData())
-        }
+        return getApiHelper().getDashboardData()
 
     }
 

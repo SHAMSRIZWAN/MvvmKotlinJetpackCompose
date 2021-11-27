@@ -1,9 +1,9 @@
 package com.example.mvvmKotlinJetpackCompose.data.network
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
 import com.example.mvvmKotlinJetpackCompose.data.network.model.Data
-import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginRequest
 import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 import com.example.mvvmKotlinJetpackCompose.util.*
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -73,7 +73,8 @@ class AppApiHelper @Inject constructor(
         return Success(DashboardResponse(data, "success", true))
     }
 
-    private inline fun processCall(responseCall: () -> Response<*>): Any? {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public inline fun processCall(responseCall: () -> Response<*>): Any? {
         if (!NetworkUtils.isNetworkAvailable(context)) {
 
             return NO_INTERNET_CONNECTION
@@ -91,11 +92,11 @@ class AppApiHelper @Inject constructor(
         }
     }
 
-    private fun getResponseCodeString(responseCode: Int):String {
-        if(responseCode in 400..499){
-           return  CLIENT_SIDE_ERROR
-        }else if(responseCode in 500..599){
-           return  SERVER_SIDE_ERROR
+    public fun getResponseCodeString(responseCode: Int): String {
+        if (responseCode in 400..499) {
+            return CLIENT_SIDE_ERROR
+        } else if (responseCode in 500..599) {
+            return SERVER_SIDE_ERROR
         }
         return SOMETHING_WENT_WRONG
     }

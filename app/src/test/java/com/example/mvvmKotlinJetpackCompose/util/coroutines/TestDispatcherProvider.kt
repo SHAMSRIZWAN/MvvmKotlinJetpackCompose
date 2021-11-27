@@ -1,6 +1,5 @@
-package com.finance.expensetracker.util.coroutines
+package com.example.mvvmKotlinJetpackCompose.util.coroutines
 
-import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -10,7 +9,6 @@ import kotlinx.coroutines.test.TestCoroutineScope
 class TestDispatcherProvider : DispatcherProvider {
 
     val testDispatcher = TestCoroutineDispatcher()
-    val testScope = TestCoroutineScope(testDispatcher)
 
     override fun computation(): CoroutineDispatcher {
         return testDispatcher
@@ -22,4 +20,7 @@ class TestDispatcherProvider : DispatcherProvider {
     }
 
 
+    override fun main(): CoroutineDispatcher {
+        return testDispatcher
+    }
 }

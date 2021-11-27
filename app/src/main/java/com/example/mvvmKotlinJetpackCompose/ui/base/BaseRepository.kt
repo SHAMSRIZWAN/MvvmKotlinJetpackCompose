@@ -2,8 +2,6 @@ package com.example.mvvmKotlinJetpackCompose.ui.base
 
 import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
-import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
-import kotlinx.coroutines.flow.flow
 
 
 open class BaseRepository(
@@ -21,12 +19,10 @@ open class BaseRepository(
         return preferencesHelper
     }
 
-    fun getUserId(): kotlinx.coroutines.flow.Flow<String> {
-        return flow { emit(getPreferencesHelper().getCurrentUserId() ?:"") }
+    fun getUserId(): String {
+        return getPreferencesHelper().getCurrentUserId() ?: ""
+
     }
-
-
-
 
 
 }

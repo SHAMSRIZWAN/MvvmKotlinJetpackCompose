@@ -28,8 +28,8 @@ open class BaseViewModel<R : BaseRepository>(
     val onErrorDialogDismiss: LiveData<Resource<Boolean>> get() = onErrorDialogDissmissPrivate
 
     protected val exceptionHandler = CoroutineExceptionHandler { context, exception ->
-        showMessageDialog(DataError(SOMETHING_WENT_WRONG))
         hideLoading()
+        showMessageDialog(DataError(SOMETHING_WENT_WRONG))
 
     }
 
