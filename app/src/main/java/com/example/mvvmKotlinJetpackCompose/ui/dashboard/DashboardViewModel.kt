@@ -1,6 +1,7 @@
 package com.example.mvvmKotlinJetpackCompose.ui.dashboard
 
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -26,17 +27,17 @@ class DashboardViewModel @Inject constructor(
 ) :
     BaseViewModel<DashboardRepo>(repo, appDispatcher) {
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting(otherwise = PRIVATE)
     val dashboardDataPrivate = MutableLiveData<Resource<DashboardResponse>>()
     val dashboardData: LiveData<Resource<DashboardResponse>> get() = dashboardDataPrivate
 
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting(otherwise = PRIVATE)
     val userIdDataPrivate = MutableLiveData<Resource<String>>()
     val userIdData: LiveData<Resource<String>> get() = userIdDataPrivate
 
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting(otherwise = PRIVATE)
     val logoutPrivate = MutableLiveData<SingleEvent<Resource<Boolean>>>()
     val logoutData: LiveData<SingleEvent<Resource<Boolean>>> get() = logoutPrivate
 

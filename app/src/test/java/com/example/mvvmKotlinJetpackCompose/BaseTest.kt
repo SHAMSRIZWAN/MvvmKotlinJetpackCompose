@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseViewModel
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.CoroutineTestRule
-import com.example.mvvmKotlinJetpackCompose.util.coroutines.TestDataClassGenerator
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.TestDispatcherProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before

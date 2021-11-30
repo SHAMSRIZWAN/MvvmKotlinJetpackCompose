@@ -2,15 +2,13 @@ package com.example.mvvmKotlinJetpackCompose.ui.login
 
 import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
-import com.example.mvvmKotlinJetpackCompose.data.network.Success
 import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.util.NO_INTERNET_CONNECTION
-import com.example.mvvmKotlinJetpackCompose.util.coroutines.TestDataClassGenerator
+import com.example.mvvmKotlinJetpackCompose.TestDataClassGenerator
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Before

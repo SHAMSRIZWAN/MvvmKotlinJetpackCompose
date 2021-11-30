@@ -1,10 +1,8 @@
 package com.example.mvvmKotlinJetpackCompose.ui.login
 
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,25 +14,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import com.example.mvvmKotlinJetpackCompose.R
 import com.example.mvvmKotlinJetpackCompose.data.network.DataError
-import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseComponentActivity
 import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardActivity
-import com.example.mvvmKotlinJetpackCompose.ui.theme.LiquorCoinTheme
+import com.example.mvvmKotlinJetpackCompose.ui.theme.CoinTheme
 import com.example.mvvmKotlinJetpackCompose.ui.theme.Shapes
 import com.example.mvvmKotlinJetpackCompose.util.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,7 +62,8 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
 
         LoginCompose {
             TopImageAndText()
-            var txtAccountNo by remember { mutableStateOf("suorizwansayyed786@gmail.com") }
+            var txtAccountNo by remember {
+                mutableStateOf("suorizwansayyed786@gmail.com") }
 
             TextFieldUserName(txtAccountNo) { txtAccountNo = it }
             var txtPass by remember { mutableStateOf("SuoRizwan") }
@@ -92,7 +85,9 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
     @Composable
     private fun RegistrationButton(onClick: () -> Unit={}) {
 
-        Button(modifier = Modifier.width(dimensionResource(R.dimen.dp_150)),
+        Button(modifier = Modifier
+            .testTag(stringResource(id = R.string.sign_in))
+            .width(dimensionResource(R.dimen.dp_150)),
             colors = ButtonDefaults
                 .buttonColors(MaterialTheme.colors.secondary),
             onClick = { onClick() }) {
@@ -112,10 +107,13 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
 
 
         TextField(modifier = Modifier
+            .testTag(stringResource(R.string.password))
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(shape = Shapes.medium,
-                color = MaterialTheme.colors.secondary),
+            .background(
+                shape = Shapes.medium,
+                color = MaterialTheme.colors.secondary
+            ),
             maxLines = 1,
             singleLine = true,
             value = txtPass,
@@ -171,16 +169,19 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
 
 
         TextField(modifier = Modifier
+            .testTag(stringResource(R.string.email_address))
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(shape = Shapes.medium,
-                color = MaterialTheme.colors.secondary),
+            .background(
+                shape = Shapes.medium,
+                color = MaterialTheme.colors.secondary
+            ),
             maxLines = 1,
             singleLine = true,
             value = txtAccountNo,
             onValueChange = { setAcc(it) },
             placeholder = {
-                Text(text = stringResource(R.string.acount_no),
+                Text(text = stringResource(R.string.email_address),
                     color = MaterialTheme.colors.onSecondary)
             },
             colors = TextFieldDefaults.textFieldColors(
@@ -232,7 +233,7 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
     )
     @Composable
     override fun ProvideComposeLightPreview() {
-        LiquorCoinTheme {
+        CoinTheme {
             LoginCompose {
 
                 TopImageAndText()

@@ -26,7 +26,7 @@ private val LightColorPalette = lightColors(
 
 
 @Composable
-fun LiquorCoinTheme(content: @Composable() () -> Unit) {
+fun CoinTheme(content: @Composable() () -> Unit) {
 
 
     MaterialTheme(

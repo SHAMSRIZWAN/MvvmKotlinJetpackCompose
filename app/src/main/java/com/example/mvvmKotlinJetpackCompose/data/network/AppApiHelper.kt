@@ -35,7 +35,7 @@ class AppApiHelper @Inject constructor(
 
 
     override fun login(email: String, password: String): Resource<LoginResponse> {
-//        val service = serviceGenerator.createService(Service::class.java)
+//        val service = serviceGenerator.getService()
 //
 //        val request = LoginRequest(email, password, "", "")
 //
@@ -60,7 +60,7 @@ class AppApiHelper @Inject constructor(
         delay(3000)
 
 //        serviceGenerator.protectedApiHeader = getApiHeader().protectedApiHeader
-//        val service = serviceGenerator.createService(Service::class.java)
+//        val service = serviceGenerator.getService()
 //
 //        return when (val response = processCall { service.getDashboardData() }) {
 //            is DashboardResponse -> Success(response)

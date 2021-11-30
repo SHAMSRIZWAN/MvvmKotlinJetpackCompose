@@ -4,15 +4,12 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.mvvmKotlinJetpackCompose.data.network.DataError
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
 import com.example.mvvmKotlinJetpackCompose.util.SOMETHING_WENT_WRONG
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 open class BaseViewModel<R : BaseRepository>(
     private val repository: R,
@@ -24,8 +21,8 @@ open class BaseViewModel<R : BaseRepository>(
 
     val showMessageDialog = MutableLiveData<Resource<String>>()
 
-    private val onErrorDialogDissmissPrivate = MutableLiveData<Resource<Boolean>>()
-    val onErrorDialogDismiss: LiveData<Resource<Boolean>> get() = onErrorDialogDissmissPrivate
+    private val onErrorDialogDismissPrivate = MutableLiveData<Resource<Boolean>>()
+    val onErrorDialogDismiss: LiveData<Resource<Boolean>> get() = onErrorDialogDismissPrivate
 
     protected val exceptionHandler = CoroutineExceptionHandler { context, exception ->
         hideLoading()

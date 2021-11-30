@@ -64,8 +64,8 @@ class ServiceGenerator  @Inject constructor(){
 
     }
 
-    fun <S> createService(serviceClass:Class<S>):S{
-       return  retrofit.create(serviceClass)
+    fun  getService(): Service {
+       return  retrofit.create(Service::class.java)
     }
 
     private fun getMoshi(): Moshi {

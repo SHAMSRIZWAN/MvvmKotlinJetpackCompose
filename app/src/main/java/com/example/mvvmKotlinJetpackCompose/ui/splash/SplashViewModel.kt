@@ -1,6 +1,7 @@
 package com.example.mvvmKotlinJetpackCompose.ui.splash
 
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -27,7 +28,7 @@ class SplashViewModel @Inject constructor(
     appDispatcher: DispatcherProvider,
 ) : BaseViewModel<RegistrationRepo>(registrationRepo, appDispatcher) {
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting(otherwise = PRIVATE)
     val privateSingleEventOpenActivity =
         MutableLiveData<SingleEvent<Resource<Int>>>()// if we keep this private
     //then it will not be visible for test package, hence its public, annotation helped us to make our code more

@@ -3,7 +3,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="login_title">A demo App using kotlin, Mvvm, jetpack Compose, Unit testing.</string>
-    <string name="acount_no">Email Address</string>
+    <string name="email_address">Email Address</string>
     <string name="sign_in">Sign In</string>
     <string name="password">Password</string>
     <string name="hyper_link">Forgot Password ?  Registration</string>
@@ -42,5 +42,8 @@
     <string name="transaction_processed">Transaction Processed !</string>
     <string name="transaction_pending">Transaction Pending !</string>
     <string name="invalid_otp">Invalid Otp</string>
+    <string name="test_tag_circular_progress">progress_tag</string>
+    <string name="drawer_test_tag">drawer_test_tag</string>
+    <string name="dashboard_content_tag">dashboard_content_tag</string>
 
 </resources>

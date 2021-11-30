@@ -1,4 +1,4 @@
-package com.example.mvvmKotlinJetpackCompose.util.coroutines
+package com.example.mvvmKotlinJetpackCompose
 
 import com.example.mvvmKotlinJetpackCompose.data.network.DataError
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
@@ -8,8 +8,6 @@ import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 import com.example.mvvmKotlinJetpackCompose.util.NO_INTERNET_CONNECTION
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.io.File
 
 
@@ -18,10 +16,9 @@ class TestDataClassGenerator {
     val moshi = Moshi.Builder().build()
 
     //generic function to  generate data classes from json file path
-    inline fun <reified T> buildDataClassFromJson(json: String): T {
+    private inline fun <reified T> buildDataClassFromJson(json: String): T {
         val jsonAdapter: JsonAdapter<T> = moshi.adapter(T::class.java)
-        val result = jsonAdapter.fromJson(json)!!
-        return result
+        return jsonAdapter.fromJson(json)!!
     }
 
 

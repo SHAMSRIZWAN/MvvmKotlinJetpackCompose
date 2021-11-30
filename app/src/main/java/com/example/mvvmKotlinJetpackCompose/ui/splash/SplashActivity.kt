@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -12,7 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,7 +22,7 @@ import com.example.mvvmKotlinJetpackCompose.data.network.Success
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseComponentActivity
 import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardActivity
 import com.example.mvvmKotlinJetpackCompose.ui.login.LoginActivity
-import com.example.mvvmKotlinJetpackCompose.ui.theme.LiquorCoinTheme
+import com.example.mvvmKotlinJetpackCompose.ui.theme.CoinTheme
 import com.example.mvvmKotlinJetpackCompose.util.observeEvent
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,7 +58,9 @@ class SplashActivity : BaseComponentActivity<SplashViewModel>() {
                     }
                     if (loadingValue) {
 
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(Modifier.testTag(
+                            getString(R.string.test_tag_circular_progress)
+                        ))
                     }
 
                 }
@@ -108,7 +109,7 @@ class SplashActivity : BaseComponentActivity<SplashViewModel>() {
     )
     @Composable
     override fun ProvideComposeLightPreview() {
-        LiquorCoinTheme {
+        CoinTheme {
 
             SplashCompose {
                 ImageAndAppName {

@@ -18,6 +18,8 @@ const val SOMETHING_WENT_WRONG ="Something went Wrong"
 const val CLIENT_SIDE_ERROR ="Client side error"
 const val SERVER_SIDE_ERROR ="Server side error"
 
+
+
 enum class LoggedInMode(val type: Int) {
     LOGGED_IN_MODE_LOGGED_OUT(0),
     LOGGED_IN_MODE_GOOGLE(1),

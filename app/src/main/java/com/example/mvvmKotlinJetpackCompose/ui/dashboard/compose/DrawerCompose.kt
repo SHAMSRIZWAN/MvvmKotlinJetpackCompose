@@ -11,16 +11,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.mvvmKotlinJetpackCompose.R
-import com.example.mvvmKotlinJetpackCompose.ui.theme.LiquorCoinTheme
+import com.example.mvvmKotlinJetpackCompose.ui.theme.CoinTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -37,6 +36,7 @@ fun DrawerCompose(
 
     Column(
         Modifier
+            .testTag(stringResource(R.string.drawer_test_tag))
             .fillMaxSize()
             .background(MaterialTheme.colors.onSecondary)) {
         Box(contentAlignment = Alignment.Center) {
@@ -123,7 +123,7 @@ fun DrawerItem(icon: Int, title: Int, onClick: () -> Unit) {
 @Preview(uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun Preview() {
-    LiquorCoinTheme {
+    CoinTheme {
         val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
         val scope = rememberCoroutineScope()
 

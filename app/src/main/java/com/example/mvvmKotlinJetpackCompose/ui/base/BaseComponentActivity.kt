@@ -24,7 +24,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.mvvmKotlinJetpackCompose.R
 import com.example.mvvmKotlinJetpackCompose.data.network.DataError
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
-import com.example.mvvmKotlinJetpackCompose.ui.theme.LiquorCoinTheme
+import com.example.mvvmKotlinJetpackCompose.ui.theme.CoinTheme
 import com.example.mvvmKotlinJetpackCompose.ui.theme.White
 
 abstract class BaseComponentActivity<VM : BaseViewModel<*>> : ComponentActivity() {
@@ -37,7 +37,7 @@ abstract class BaseComponentActivity<VM : BaseViewModel<*>> : ComponentActivity(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LiquorCoinTheme {
+            CoinTheme {
                 ProvideCompose()
                 SetUpLoadingDialog()
                 SetUpErrorDialog()
