@@ -50,6 +50,7 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
                 is Success -> {
                     userId.value = it.data!!
                 }
+                else -> {}
             }
         }
 
@@ -73,6 +74,7 @@ class DashboardActivity : BaseComponentActivity<DashboardViewModel>() {
                     startActivity<LoginActivity>()
                     finish()
                 }
+                else -> {}
             }
 
         }

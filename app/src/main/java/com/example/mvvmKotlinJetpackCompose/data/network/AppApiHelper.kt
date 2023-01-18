@@ -2,6 +2,7 @@ package com.example.mvvmKotlinJetpackCompose.data.network
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.Companion.PRIVATE
 import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
 import com.example.mvvmKotlinJetpackCompose.data.network.model.Data
 import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
@@ -73,7 +74,7 @@ class AppApiHelper @Inject constructor(
         return Success(DashboardResponse(data, "success", true))
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting(otherwise = PRIVATE)
     public inline fun processCall(responseCall: () -> Response<*>): Any? {
         if (!NetworkUtils.isNetworkAvailable(context)) {
 

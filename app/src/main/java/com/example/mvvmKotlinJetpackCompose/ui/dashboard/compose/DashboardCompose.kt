@@ -4,8 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -47,13 +47,13 @@ private fun Menu(menuItems: List<MenuItem>, openActivity: (String) -> Unit) {
 
 
     LazyVerticalGrid(
-        cells = GridCells.Fixed(4),
+        columns = GridCells.Fixed(4),
     ) {
-        items(menuItems) { item ->
+        items( count = menuItems.size) { item ->
             MenuItemCompose(Modifier
                 .padding(top = dimensionResource(R.dimen.dp_40)),
-                iconId = item.icon,
-                title = item.text,
+                iconId = menuItems.get(item).icon,
+                title = menuItems.get(item).text,
                 onClick = {
                     openActivity(it)
 

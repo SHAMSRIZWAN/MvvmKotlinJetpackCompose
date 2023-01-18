@@ -54,6 +54,7 @@ class SplashActivity : BaseComponentActivity<SplashViewModel>() {
 
                             }
 
+                            else -> {}
                         }
                     }
                     if (loadingValue) {

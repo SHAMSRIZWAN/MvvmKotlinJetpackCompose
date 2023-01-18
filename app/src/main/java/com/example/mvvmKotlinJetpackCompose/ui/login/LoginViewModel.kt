@@ -1,6 +1,7 @@
 package com.example.mvvmKotlinJetpackCompose.ui.login
 
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.Companion.PRIVATE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -26,7 +27,7 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel<RegistrationRepo>(registrationRepo, appDispatcher) {
 
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting(otherwise = PRIVATE)
     val loginResponsePrivate = MutableLiveData<Resource<LoginResponse>>()
     val loginResponse: LiveData<Resource<LoginResponse>> get() = loginResponsePrivate
 

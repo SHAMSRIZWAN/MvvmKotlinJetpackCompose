@@ -1,6 +1,7 @@
 package com.example.mvvmKotlinJetpackCompose.ui.base
 
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.Companion.PRIVATE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,7 @@ open class BaseViewModel<R : BaseRepository>(
     private val appDispatcher: DispatcherProvider,
 ) : ViewModel() {
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting(otherwise = PRIVATE)
     val showDialogLoadingPrivate = MutableLiveData(false)
 
     val showMessageDialog = MutableLiveData<Resource<String>>()

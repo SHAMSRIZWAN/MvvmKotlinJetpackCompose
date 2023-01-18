@@ -73,6 +73,8 @@ abstract class BaseComponentActivity<VM : BaseViewModel<*>> : ComponentActivity(
             is Success -> {
                 dialogState = false
             }
+
+            else -> {}
         }
         if (dialogState) {
             ShowErrorDialog(errorDescription)
