@@ -22,6 +22,7 @@ import com.example.mvvmKotlinJetpackCompose.data.network.Success
 import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
 import com.example.mvvmKotlinJetpackCompose.data.others.MenuItem
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseComponentActivity
+import com.example.mvvmKotlinJetpackCompose.ui.dashboard.compose.BottomNavData
 import com.example.mvvmKotlinJetpackCompose.ui.dashboard.compose.TopBar
 import com.example.mvvmKotlinJetpackCompose.ui.login.LoginActivity
 import com.example.mvvmKotlinJetpackCompose.util.observe

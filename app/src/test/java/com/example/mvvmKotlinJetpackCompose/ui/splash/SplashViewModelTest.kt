@@ -1,7 +1,7 @@
 package com.example.mvvmKotlinJetpackCompose.ui.splash
 
 import com.example.mvvmKotlinJetpackCompose.BaseTest
-import com.example.mvvmKotlinJetpackCompose.ui.login.RegistrationRepo
+import com.example.mvvmKotlinJetpackCompose.ui.login.LoginRepo
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import org.junit.Before
 import org.junit.Test
 
-class SplashViewModelTest : BaseTest<SplashViewModel, RegistrationRepo>() {
+class SplashViewModelTest : BaseTest<SplashViewModel, LoginRepo>() {
 
 
     @ExperimentalCoroutinesApi

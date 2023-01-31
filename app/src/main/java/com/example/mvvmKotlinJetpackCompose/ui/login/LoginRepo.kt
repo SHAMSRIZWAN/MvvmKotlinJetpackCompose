@@ -5,17 +5,18 @@ import com.example.mvvmKotlinJetpackCompose.data.network.DataError
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
+import com.example.mvvmKotlinJetpackCompose.di.login.LoginScope
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class RegistrationRepo @Inject constructor(
+@LoginScope
+class LoginRepo @Inject constructor(
     apiHelper: ApiHelper,
     preferencesHelper: PreferencesHelper,
 ) : BaseRepository(apiHelper, preferencesHelper) {
-
 
     fun login(email: String, password: String): Flow<Resource<LoginResponse>> {
         val loginResult = getApiHelper().login(email, password)

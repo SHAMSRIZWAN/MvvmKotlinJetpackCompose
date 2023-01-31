@@ -13,7 +13,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 
-class LoginViewModelTest : BaseTest<LoginViewModel, RegistrationRepo>() {
+class LoginViewModelTest : BaseTest<LoginViewModel, LoginRepo>() {
 
 
     @ExperimentalCoroutinesApi

@@ -3,7 +3,7 @@ package com.example.mvvmKotlinJetpackCompose.data.prefs
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
 
 
-interface PreferencesHelper {
+interface   PreferencesHelper {
 
     suspend fun getCurrentUserLoggedInMode(): Int?
 

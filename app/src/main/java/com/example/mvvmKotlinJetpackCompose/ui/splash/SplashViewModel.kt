@@ -1,33 +1,33 @@
 package com.example.mvvmKotlinJetpackCompose.ui.splash
 
 import androidx.annotation.VisibleForTesting
-import androidx.annotation.VisibleForTesting.*
 import androidx.annotation.VisibleForTesting.Companion.PRIVATE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
+import com.example.mvvmKotlinJetpackCompose.di.login.LoginComponentManager
+import com.example.mvvmKotlinJetpackCompose.di.login.LoginEntryPoint
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseViewModel
-import com.example.mvvmKotlinJetpackCompose.ui.login.RegistrationRepo
+import com.example.mvvmKotlinJetpackCompose.ui.login.LoginRepo
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
 import com.example.mvvmKotlinJetpackCompose.util.SingleEvent
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
+import dagger.hilt.EntryPoints
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    registrationRepo: RegistrationRepo,
+    loginComponentManager: LoginComponentManager,
     appDispatcher: DispatcherProvider,
-) : BaseViewModel<RegistrationRepo>(registrationRepo, appDispatcher) {
+) : BaseViewModel<LoginRepo>(
+    EntryPoints.get(loginComponentManager.loginComponent!!, LoginEntryPoint::class.java)
+    .getLoginRepo(), appDispatcher) {
 
     @VisibleForTesting(otherwise = PRIVATE)
     val privateSingleEventOpenActivity =
@@ -45,7 +45,6 @@ class SplashViewModel @Inject constructor(
     @FlowPreview
     fun decideActivity() {
         showLoading()
-
         viewModelScope.launch(exceptionHandler) {
 
             getRepo().isUserLoggedIn()

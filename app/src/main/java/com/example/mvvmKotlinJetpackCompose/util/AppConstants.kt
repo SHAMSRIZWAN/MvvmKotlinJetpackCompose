@@ -1,7 +1,7 @@
 package com.example.mvvmKotlinJetpackCompose.util
 
 
-const val PREF_NAME = "Liquor_coin_pref"
+const val PREF_NAME = "MvvmKotlin_JetpackCompose_pref"
 const val PREF_KEY_USER_LOGGED_IN_MODE = "PREF_KEY_USER_LOGGED_IN_MODE"
 const val PREF_KEY_CURRENT_USER_ID = "PREF_KEY_CURRENT_USER_ID"
 const val PREF_KEY_CURRENT_USER_NAME = "PREF_KEY_CURRENT_USER_NAME"

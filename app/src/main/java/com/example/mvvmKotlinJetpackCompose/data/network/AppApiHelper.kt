@@ -22,6 +22,8 @@ class AppApiHelper @Inject constructor(
     @Inject
     lateinit var serviceGenerator: ServiceGenerator
 
+
+
     override fun getApiHeader(): ApiHeader {
 
         return apiHeader
@@ -36,7 +38,7 @@ class AppApiHelper @Inject constructor(
 
 
     override fun login(email: String, password: String): Resource<LoginResponse> {
-//        val service = serviceGenerator.getService()
+//        val service = serviceGenerator.service
 //
 //        val request = LoginRequest(email, password, "", "")
 //

@@ -14,14 +14,14 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class RegistrationRepoTest {
+class LoginRepoTest {
 
 
     lateinit var apiHelper: ApiHelper
 
     lateinit var preferencesHelper: PreferencesHelper
 
-    lateinit var repoUnderTest: RegistrationRepo
+    lateinit var repoUnderTest: LoginRepo
 
     protected val testDataClassGenerator: TestDataClassGenerator = TestDataClassGenerator()
 
@@ -29,7 +29,7 @@ class RegistrationRepoTest {
     fun setTup() {
         apiHelper = mockk(relaxUnitFun = true)
         preferencesHelper = mockk(relaxUnitFun = true)
-        repoUnderTest = RegistrationRepo(apiHelper, preferencesHelper)
+        repoUnderTest = LoginRepo(apiHelper, preferencesHelper)
 
     }
 

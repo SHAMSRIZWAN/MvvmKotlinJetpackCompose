@@ -7,78 +7,52 @@ import com.example.mvvmKotlinJetpackCompose.data.prefs.AppPreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
 import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardRepo
-import com.example.mvvmKotlinJetpackCompose.ui.login.RegistrationRepo
+import com.example.mvvmKotlinJetpackCompose.ui.login.LoginRepo
 import com.example.mvvmKotlinJetpackCompose.util.PREF_NAME
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.AppDispatcherProvider
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
-import dagger.Provides
+import dagger.Binds
 import dagger.Module
+import dagger.Provides
+import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
- class AppModule {
+abstract class AppModule {
 
+    companion object{
+        @Provides
+        @PreferenceInfo
+        fun providePreferenceName(): String {
+            return PREF_NAME
+        }
 
-    @Provides
+        @Provides
+        @EmptyString
+        fun provideApiKey(): String {
+            return ""
+        }
+
+    }
+
+    @Binds
     @Singleton
-    fun provideApiHelper(apiHelper: AppApiHelper): ApiHelper {
-        return apiHelper
-    }
+    abstract fun provideApiHelper(appApiHelper: AppApiHelper): ApiHelper
 
-    @Provides
-    @PreferenceInfo
-    fun providePreferenceName(): String {
-        return PREF_NAME
-    }
-
-    @Provides
-    @ApiInfo
-    fun provideApiKey(): String {
-        return ""
-    }
-
-
-    @Provides
+    @Binds
     @Singleton
-    fun provideProtectedApiHeader(@ApiInfo apiKey:String,preferencesHelper : PreferencesHelper)
-    : ApiHeader.ProtectedApiHeader{
-        return ApiHeader.ProtectedApiHeader(
-            preferencesHelper.getAccessToken() ?:apiKey,
-            preferencesHelper.getCurrentUserId(),
-            preferencesHelper.getAccessToken())
-    }
+    abstract fun providePreferenceHelper(appPreferencesHelper: AppPreferencesHelper): PreferencesHelper
 
-    @Provides
+
+    @Binds
     @Singleton
-    fun providePreferenceHelper(appPreferencesHelper: AppPreferencesHelper): PreferencesHelper {
-    return appPreferencesHelper
-    }
+    abstract fun provideDispatcher(dispatcherProvider: AppDispatcherProvider): DispatcherProvider
 
-
-    @Provides
+    @Binds
     @Singleton
-    fun provideDispatcher(dispatcherProvider: AppDispatcherProvider): DispatcherProvider {
-    return dispatcherProvider
-    }
-
-
-    @Provides
-    @Singleton
-//    @RegistrationScope
-    fun provideRegistrationRepo(registrationRepo: RegistrationRepo): BaseRepository {
-    return registrationRepo
-    }
-
-    @Provides
-    @Singleton
-    fun provideDashboardRepo(dashboardRepo: DashboardRepo): BaseRepository {
-        return dashboardRepo
-    }
-
-
-
+    abstract fun provideDashboardRepo(dashboardRepo: DashboardRepo): BaseRepository
 
 }

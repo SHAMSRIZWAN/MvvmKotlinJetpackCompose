@@ -1,4 +1,4 @@
-package com.example.mvvmKotlinJetpackCompose.ui.dashboard
+package com.example.mvvmKotlinJetpackCompose.ui.dashboard.compose
 
 import com.example.mvvmKotlinJetpackCompose.R
 
