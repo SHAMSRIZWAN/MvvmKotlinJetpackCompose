@@ -22,6 +22,7 @@ class LoginRepository @Inject constructor(
     preferencesHelper: PreferencesHelper,
 ) : BaseRepository(appDispatcherProvider,apiHelper, preferencesHelper) {
 
+
     fun login(email: String, password: String): Flow<Resource<LoginResponse>> {
         val loginResult = getApiHelper().login(email, password)
 
@@ -51,7 +52,7 @@ class LoginRepository @Inject constructor(
 
         return flow {
             emit(loginResult)
-        }.flowOn(getAppDispatcher().io())
+        }
     }
 
     suspend fun isUserLoggedIn(): Flow<Int?> {
@@ -60,8 +61,10 @@ class LoginRepository @Inject constructor(
             delay(3000)
 
             emit(getPreferencesHelper().getCurrentUserLoggedInMode())
-        } .flowOn(getAppDispatcher().computation())
+        }.flowOn(getAppDispatcher().computation())
+
     }
+
 
 
 }

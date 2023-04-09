@@ -15,14 +15,11 @@ class LoginComponentManager @Inject constructor(
     private val loginComponentProvider: Provider<LoginComponentBuilder>,
     private val apiHelper: ApiHelper,
     private val preferencesHelper: PreferencesHelper,
-) {
+)
+{
 
     var loginComponent: LoginComponent? = null
 
-//    init {
-//        val loginRepository = LoginRepository(appDispatcherProvider, apiHelper, preferencesHelper)
-//        loginComponent=  loginComponentProvider.get().bindLoginRepo(loginRepository).build()
-//    }
 
     fun getComponent():LoginComponent{
         if(loginComponent==null){
