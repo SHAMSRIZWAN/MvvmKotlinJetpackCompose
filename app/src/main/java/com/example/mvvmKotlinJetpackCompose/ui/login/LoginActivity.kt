@@ -24,23 +24,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.mvvmKotlinJetpackCompose.R
 import com.example.mvvmKotlinJetpackCompose.data.network.DataError
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
+import com.example.mvvmKotlinJetpackCompose.data.repos.LoginRepository
+import com.example.mvvmKotlinJetpackCompose.di.login.LoginComponentManager
+import com.example.mvvmKotlinJetpackCompose.di.login.LoginEntryPoint
+import com.example.mvvmKotlinJetpackCompose.ui.ViewModelFactory
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseComponentActivity
 import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardActivity
 import com.example.mvvmKotlinJetpackCompose.ui.theme.CoinTheme
 import com.example.mvvmKotlinJetpackCompose.ui.theme.Shapes
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import com.example.mvvmKotlinJetpackCompose.util.observe
+import dagger.hilt.EntryPoints
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : BaseComponentActivity<LoginViewModel>() {
 
-    override val viewModel: LoginViewModel by viewModels()
+    @Inject
+    lateinit var loginComponentManager: LoginComponentManager
 
-//    @Inject
-//    lateinit var registrationComponent: RegistrationComponent
-//    val toDoRepository = EntryPoints
-//        .get(registrationComponent, RegistrationComponentEntryPoint::class.java)
-//        .getRegistrationRepo()
+    private lateinit var loginRepository: LoginRepository
+
+    override val viewModel: LoginViewModel by viewModels {
+        loginRepository = EntryPoints.get(
+            loginComponentManager.getComponent(),
+            LoginEntryPoint::class.java
+        ).getLoginRepo()
+        ViewModelFactory(loginRepository)
+
+    }
 
 
 
@@ -52,6 +65,7 @@ class LoginActivity : BaseComponentActivity<LoginViewModel>() {
                 is DataError -> {
                 }
                 is Success -> {
+                    loginComponentManager.destroyLoginComponent()
                     startDashboardAcitivty()
                     finish()
                 }

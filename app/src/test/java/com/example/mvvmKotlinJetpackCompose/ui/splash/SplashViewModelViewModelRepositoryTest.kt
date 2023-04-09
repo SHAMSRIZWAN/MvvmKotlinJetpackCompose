@@ -1,7 +1,9 @@
 package com.example.mvvmKotlinJetpackCompose.ui.splash
 
-import com.example.mvvmKotlinJetpackCompose.BaseTest
-import com.example.mvvmKotlinJetpackCompose.ui.login.LoginRepo
+import com.example.mvvmKotlinJetpackCompose.BaseViewModelRepositoryTest
+import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
+import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
+import com.example.mvvmKotlinJetpackCompose.data.repos.LoginRepository
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -11,14 +13,22 @@ import kotlinx.coroutines.flow.flow
 import org.junit.Before
 import org.junit.Test
 
-class SplashViewModelTest : BaseTest<SplashViewModel, LoginRepo>() {
+class SplashViewModelViewModelRepositoryTest : BaseViewModelRepositoryTest<SplashViewModel, LoginRepository>() {
+
+    lateinit var apiHelper: ApiHelper
+    lateinit var preferencesHelper: PreferencesHelper
+
 
 
     @ExperimentalCoroutinesApi
     @Before
     override fun setUp() {
+
+        apiHelper = mockk(relaxUnitFun = true)
+        preferencesHelper = mockk(relaxUnitFun = true)
         repository = mockk()
-        viewModelUnderTest = SplashViewModel(repository, appDispatcher)
+
+        viewModelUnderTest = SplashViewModel(repository)
 
     }
 
@@ -30,7 +40,6 @@ class SplashViewModelTest : BaseTest<SplashViewModel, LoginRepo>() {
     @Test
     fun `decideActivity, input loggedOut state ,return value 2`() {
         //Given
-
         coEvery { repository.isUserLoggedIn() } returns flow { emit(LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.type) }
 
         //when

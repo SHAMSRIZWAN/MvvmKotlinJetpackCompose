@@ -1,8 +1,11 @@
 package com.example.mvvmKotlinJetpackCompose.ui.login
 
-import com.example.mvvmKotlinJetpackCompose.BaseTest
+import com.example.mvvmKotlinJetpackCompose.BaseViewModelRepositoryTest
+import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
+import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
+import com.example.mvvmKotlinJetpackCompose.data.repos.LoginRepository
 import com.example.mvvmKotlinJetpackCompose.util.ENTER_EMAIL_ID
 import com.example.mvvmKotlinJetpackCompose.util.ENTER_PASSWORD
 import com.example.mvvmKotlinJetpackCompose.util.NO_INTERNET_CONNECTION
@@ -13,13 +16,16 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 
-class LoginViewModelTest : BaseTest<LoginViewModel, LoginRepo>() {
-
+class LoginViewModelTest : BaseViewModelRepositoryTest<LoginViewModel, LoginRepository>() {
+    lateinit var apiHelper: ApiHelper
+    lateinit var preferencesHelper: PreferencesHelper
 
     @ExperimentalCoroutinesApi
     override fun setUp() {
+        apiHelper = mockk(relaxUnitFun = true)
+        preferencesHelper = mockk(relaxUnitFun = true)
         repository = mockk()
-        viewModelUnderTest =  spyk(LoginViewModel(repository, appDispatcher))
+        viewModelUnderTest =  spyk(LoginViewModel(repository))
     }
 
     @Test

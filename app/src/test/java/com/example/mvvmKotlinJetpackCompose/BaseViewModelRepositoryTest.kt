@@ -9,7 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 
-abstract class BaseTest<Vm : BaseViewModel<Repo>, Repo : BaseRepository> {
+abstract class BaseViewModelRepositoryTest<Vm : BaseViewModel<Repo>, Repo : BaseRepository> {
     // Subject under test
     protected lateinit var viewModelUnderTest: Vm
 

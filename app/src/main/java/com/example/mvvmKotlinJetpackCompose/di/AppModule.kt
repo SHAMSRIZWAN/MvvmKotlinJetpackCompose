@@ -1,20 +1,17 @@
 package com.example.mvvmKotlinJetpackCompose.di
 
-import com.example.mvvmKotlinJetpackCompose.data.network.ApiHeader
 import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
 import com.example.mvvmKotlinJetpackCompose.data.network.AppApiHelper
 import com.example.mvvmKotlinJetpackCompose.data.prefs.AppPreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
-import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardRepo
-import com.example.mvvmKotlinJetpackCompose.ui.login.LoginRepo
+import com.example.mvvmKotlinJetpackCompose.data.repos.DashboardRepository
 import com.example.mvvmKotlinJetpackCompose.util.PREF_NAME
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.AppDispatcherProvider
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -53,6 +50,6 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun provideDashboardRepo(dashboardRepo: DashboardRepo): BaseRepository
+    abstract fun provideDashboardRepo(dashboardRepository: DashboardRepository): BaseRepository
 
 }

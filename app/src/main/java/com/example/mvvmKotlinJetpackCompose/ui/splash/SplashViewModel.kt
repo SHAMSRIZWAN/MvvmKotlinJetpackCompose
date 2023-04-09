@@ -7,27 +7,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
-import com.example.mvvmKotlinJetpackCompose.di.login.LoginComponentManager
-import com.example.mvvmKotlinJetpackCompose.di.login.LoginEntryPoint
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseViewModel
-import com.example.mvvmKotlinJetpackCompose.ui.login.LoginRepo
+import com.example.mvvmKotlinJetpackCompose.data.repos.LoginRepository
+import com.example.mvvmKotlinJetpackCompose.ui.base.BaseViewModelRepository
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
 import com.example.mvvmKotlinJetpackCompose.util.SingleEvent
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
-import dagger.hilt.EntryPoints
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SplashViewModel @Inject constructor(
-    loginComponentManager: LoginComponentManager,
-    appDispatcher: DispatcherProvider,
-) : BaseViewModel<LoginRepo>(
-    EntryPoints.get(loginComponentManager.loginComponent!!, LoginEntryPoint::class.java)
-    .getLoginRepo(), appDispatcher) {
+
+class SplashViewModel (
+    loginRepository: LoginRepository,
+) : BaseViewModelRepository<LoginRepository>(loginRepository) {
 
     @VisibleForTesting(otherwise = PRIVATE)
     val privateSingleEventOpenActivity =
@@ -47,8 +40,7 @@ class SplashViewModel @Inject constructor(
         showLoading()
         viewModelScope.launch(exceptionHandler) {
 
-            getRepo().isUserLoggedIn()
-                .flowOn(getAppDispatcher().computation())
+            getRepository().isUserLoggedIn()
                 .collect {
                     hideLoading()
                     if (it == LoggedInMode.LOGGED_IN_MODE_SERVER.type) {
@@ -59,8 +51,6 @@ class SplashViewModel @Inject constructor(
 
                     }
                 }
-
-
 
         }
 

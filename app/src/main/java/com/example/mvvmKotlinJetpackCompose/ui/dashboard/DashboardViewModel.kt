@@ -1,7 +1,6 @@
 package com.example.mvvmKotlinJetpackCompose.ui.dashboard
 
 import androidx.annotation.VisibleForTesting
-import androidx.annotation.VisibleForTesting.*
 import androidx.annotation.VisibleForTesting.Companion.PRIVATE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,11 +10,11 @@ import com.example.mvvmKotlinJetpackCompose.data.network.Resource
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
 import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
 import com.example.mvvmKotlinJetpackCompose.data.others.MenuItem
-import com.example.mvvmKotlinJetpackCompose.ui.base.BaseViewModel
+import com.example.mvvmKotlinJetpackCompose.data.repos.DashboardRepository
+import com.example.mvvmKotlinJetpackCompose.ui.base.BaseViewModelUseCase
 import com.example.mvvmKotlinJetpackCompose.util.SingleEvent
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -23,10 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    repo: DashboardRepo,
-    appDispatcher: DispatcherProvider
-) :
-    BaseViewModel<DashboardRepo>(repo, appDispatcher) {
+    dashboardUseCase: DashboardUseCase
+) : BaseViewModelUseCase<DashboardUseCase>(dashboardUseCase) {
 
     @VisibleForTesting(otherwise = PRIVATE)
     val dashboardDataPrivate = MutableLiveData<Resource<DashboardResponse>>()
@@ -42,22 +39,19 @@ class DashboardViewModel @Inject constructor(
     val logoutPrivate = MutableLiveData<SingleEvent<Resource<Boolean>>>()
     val logoutData: LiveData<SingleEvent<Resource<Boolean>>> get() = logoutPrivate
 
-    init {
+//    init {
+//        getDashBoarData()
+//    }
 
-        getDashBoarData()
-
-
-    }
-
-     fun getDashBoarData() {
+    fun getDashBoarData() {
 
         viewModelScope.launch(exceptionHandler) {
             showLoading()
 
-            val dashboardData = getRepo().getDashboardData()
+            val dashboardData = getUseCase().getDashboardData()
             dashboardDataPrivate.value = dashboardData
 
-            val userId = getRepo().getUserId()
+            val userId = getUseCase().getUserId()
             userIdDataPrivate.value = Success(userId)
 
             hideLoading()
@@ -85,15 +79,9 @@ class DashboardViewModel @Inject constructor(
     fun logout() {
 
         viewModelScope.launch(exceptionHandler) {
-            flow {
-                emit(getRepo().logout())
-            }.flowOn(getAppDispatcher().computation())
-                .collect {
 
-                    logoutPrivate.value = SingleEvent(Success(true))
-
-                }
-
+            getUseCase().logout()
+            logoutPrivate.value = SingleEvent(Success(true))
 
         }
 

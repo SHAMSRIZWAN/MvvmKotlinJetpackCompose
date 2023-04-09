@@ -7,7 +7,7 @@ import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 interface ApiHelper {
 
     fun getApiHeader(): ApiHeader?
-    fun updateToken(token: String);
+    fun updateToken(token: String)
     fun login(email: String, password: String): Resource<LoginResponse>
 
     suspend fun getDashboardData(): Resource<DashboardResponse>

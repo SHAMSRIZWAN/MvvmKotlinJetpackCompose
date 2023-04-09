@@ -12,9 +12,8 @@ import com.example.mvvmKotlinJetpackCompose.util.SOMETHING_WENT_WRONG
 import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineExceptionHandler
 
-open class BaseViewModel<R : BaseRepository>(
-    private val repository: R,
-    private val appDispatcher: DispatcherProvider,
+open class BaseViewModel<T>(
+     val anyType:T,
 ) : ViewModel() {
 
     @VisibleForTesting(otherwise = PRIVATE)
@@ -50,13 +49,8 @@ open class BaseViewModel<R : BaseRepository>(
         }
     }
 
-    fun getRepo(): R {
-        return repository
-    }
 
-    fun getAppDispatcher(): DispatcherProvider {
-        return appDispatcher
-    }
+
 
     fun showMessageDialog(dataError: DataError<String>) {
         showMessageDialog.value = dataError

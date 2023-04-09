@@ -1,0 +1,251 @@
+Index: app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/AppModule.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/AppModule.kt b/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/ExternalLibAppModule.kt
+rename from app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/AppModule.kt
+rename to app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/ExternalLibAppModule.kt
+--- a/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/AppModule.kt	
++++ b/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/ExternalLibAppModule.kt	
+@@ -1,84 +1,93 @@
+ package com.example.mvvmKotlinJetpackCompose.di
+ 
+-import com.example.mvvmKotlinJetpackCompose.data.network.ApiHeader
+-import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
+-import com.example.mvvmKotlinJetpackCompose.data.network.AppApiHelper
+-import com.example.mvvmKotlinJetpackCompose.data.prefs.AppPreferencesHelper
+-import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
+-import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
+-import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardRepo
+-import com.example.mvvmKotlinJetpackCompose.ui.login.RegistrationRepo
+-import com.example.mvvmKotlinJetpackCompose.util.PREF_NAME
+-import com.example.mvvmKotlinJetpackCompose.util.coroutines.AppDispatcherProvider
+-import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
++import com.example.mvvmKotlinJetpackCompose.BuildConfig
++import com.example.mvvmKotlinJetpackCompose.data.network.*
++import com.example.mvvmKotlinJetpackCompose.data.network.moshiFactories.MyKotlinJsonAdapterFactory
++import com.example.mvvmKotlinJetpackCompose.data.network.moshiFactories.MyStandardJsonAdapters
++import com.squareup.moshi.Moshi
+ import dagger.Provides
+ import dagger.Module
+ import dagger.hilt.InstallIn
+ import dagger.hilt.components.SingletonComponent
++import okhttp3.Interceptor
++import okhttp3.OkHttpClient
++import okhttp3.logging.HttpLoggingInterceptor
++import retrofit2.Retrofit
++import retrofit2.converter.moshi.MoshiConverterFactory
++import java.util.concurrent.TimeUnit
+ import javax.inject.Singleton
+ 
+ @Module
+ @InstallIn(SingletonComponent::class)
+- class AppModule {
+-
++ class ExternalLibAppModule {
+ 
+-    @Provides
+-    @Singleton
+-    fun provideApiHelper(apiHelper: AppApiHelper): ApiHelper {
+-        return apiHelper
+-    }
++   @Provides
++   @Singleton
++   fun provideHeaderInterceptor(protectedApiHeader : ApiHeader.ProtectedApiHeader): Interceptor{
++      return Interceptor { chain ->
++         val original = chain.request()
++         val request = original.newBuilder()
++            .header(contentType, contentTypeValue)
++            .header("Authorization", "Bearer " + protectedApiHeader.accessToken)
++            .method(original.method, original.body)
++            .build()
++
++         chain.proceed(request)
++      }
+ 
+-    @Provides
+-    @PreferenceInfo
+-    fun providePreferenceName(): String {
+-        return PREF_NAME
+-    }
++   }
+ 
+-    @Provides
+-    @ApiInfo
+-    fun provideApiKey(): String {
+-        return ""
+-    }
+-
+-
+-    @Provides
+-    @Singleton
+-    fun provideProtectedApiHeader(@ApiInfo apiKey:String,preferencesHelper : PreferencesHelper)
+-    : ApiHeader.ProtectedApiHeader{
+-        return ApiHeader.ProtectedApiHeader(
+-            preferencesHelper.getAccessToken() ?:apiKey,
+-            preferencesHelper.getCurrentUserId(),
+-            preferencesHelper.getAccessToken())
+-    }
++   @Provides
++   @Singleton
++   fun provideLoggingInterceptor(): HttpLoggingInterceptor {
++     return HttpLoggingInterceptor().apply {
++        if (BuildConfig.DEBUG) {
++            level = HttpLoggingInterceptor.Level.BODY
++        }
++     }
++   }
++
+ 
+-    @Provides
+-    @Singleton
+-    fun providePreferenceHelper(appPreferencesHelper: AppPreferencesHelper): PreferencesHelper {
+-    return appPreferencesHelper
+-    }
+-
++   @Provides
++   @Singleton
++   fun provideRetrofitClient(headerInterceptor : Interceptor,loggingInterceptor: HttpLoggingInterceptor) : OkHttpClient.Builder{
++
++     val okHttpBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
++      okHttpBuilder.addInterceptor(headerInterceptor)
++      okHttpBuilder.addInterceptor(loggingInterceptor)
++      okHttpBuilder.connectTimeout(timeoutConnect.toLong(), TimeUnit.SECONDS)
++      okHttpBuilder.readTimeout(timeoutRead.toLong(), TimeUnit.SECONDS)
++      return okHttpBuilder
++
++   }
+ 
+     @Provides
+     @Singleton
+-    fun provideDispatcher(dispatcherProvider: AppDispatcherProvider): DispatcherProvider {
+-    return dispatcherProvider
+-    }
+-
++   fun provideRetrofit(okHttpBuilder: OkHttpClient.Builder, moshi: Moshi):Retrofit{
++      return Retrofit.Builder()
++         .baseUrl(baseUrl)
++         .client(okHttpBuilder.build())
++         .addConverterFactory(MoshiConverterFactory.create(moshi))
++         .build()
++   }
+ 
+     @Provides
+     @Singleton
+-//    @RegistrationScope
+-    fun provideRegistrationRepo(registrationRepo: RegistrationRepo): BaseRepository {
+-    return registrationRepo
++    fun  provideService(retrofit: Retrofit): Service {
++        return  retrofit.create(Service::class.java)
+     }
++
+ 
+     @Provides
+-    @Singleton
+-    fun provideDashboardRepo(dashboardRepo: DashboardRepo): BaseRepository {
+-        return dashboardRepo
+-    }
++   @Singleton
++   fun provideMoshi():Moshi{
++    return  Moshi.Builder()
++         .add(MyStandardJsonAdapters.FACTORY)
++         .add(MyKotlinJsonAdapterFactory()).build()
++   }
+ 
+ 
+ 
+ 
++
+ }
+\ No newline at end of file
+Index: app/src/test/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepoTest.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/test/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepoTest.kt b/app/src/test/java/com/example/mvvmKotlinJetpackCompose/ui/login/LoginRepoTest.kt
+rename from app/src/test/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepoTest.kt
+rename to app/src/test/java/com/example/mvvmKotlinJetpackCompose/ui/login/LoginRepoTest.kt
+--- a/app/src/test/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepoTest.kt	
++++ b/app/src/test/java/com/example/mvvmKotlinJetpackCompose/ui/login/LoginRepoTest.kt	
+@@ -14,14 +14,14 @@
+ import org.junit.Before
+ import org.junit.Test
+ 
+-class RegistrationRepoTest {
++class LoginRepoTest {
+ 
+ 
+     lateinit var apiHelper: ApiHelper
+ 
+     lateinit var preferencesHelper: PreferencesHelper
+ 
+-    lateinit var repoUnderTest: RegistrationRepo
++    lateinit var repoUnderTest: LoginRepo
+ 
+     protected val testDataClassGenerator: TestDataClassGenerator = TestDataClassGenerator()
+ 
+@@ -29,7 +29,7 @@
+     fun setTup() {
+         apiHelper = mockk(relaxUnitFun = true)
+         preferencesHelper = mockk(relaxUnitFun = true)
+-        repoUnderTest = RegistrationRepo(apiHelper, preferencesHelper)
++        repoUnderTest = LoginRepo(apiHelper, preferencesHelper)
+ 
+     }
+ 
+Index: app/src/main/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepo.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepo.kt b/app/src/main/java/com/example/mvvmKotlinJetpackCompose/ui/login/LoginRepo.kt
+rename from app/src/main/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepo.kt
+rename to app/src/main/java/com/example/mvvmKotlinJetpackCompose/ui/login/LoginRepo.kt
+--- a/app/src/main/java/com/example/mvvmKotlinJetpackCompose/ui/login/RegistrationRepo.kt	
++++ b/app/src/main/java/com/example/mvvmKotlinJetpackCompose/ui/login/LoginRepo.kt	
+@@ -5,16 +5,25 @@
+ import com.example.mvvmKotlinJetpackCompose.data.network.Resource
+ import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
+ import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
++import com.example.mvvmKotlinJetpackCompose.di.login.LoginScope
+ import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
+ import kotlinx.coroutines.delay
+ import kotlinx.coroutines.flow.Flow
+ import kotlinx.coroutines.flow.flow
+ import javax.inject.Inject
+ 
+-class RegistrationRepo @Inject constructor(
++@LoginScope
++class LoginRepo @Inject constructor(
+     apiHelper: ApiHelper,
+     preferencesHelper: PreferencesHelper,
+ ) : BaseRepository(apiHelper, preferencesHelper) {
++    var printStatus = 0
++
++    fun print() {
++        printStatus++
++        println("login repo print $printStatus")
++
++    }
+ 
+ 
+     fun login(email: String, password: String): Flow<Resource<LoginResponse>> {
+Index: app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/ApiInfo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/ApiInfo.java b/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/EmptyString.java
+rename from app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/ApiInfo.java
+rename to app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/EmptyString.java
+--- a/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/ApiInfo.java	
++++ b/app/src/main/java/com/example/mvvmKotlinJetpackCompose/di/EmptyString.java	
+@@ -9,5 +9,5 @@
+ 
+ @Qualifier
+ @Retention(RetentionPolicy.RUNTIME)
+-public @interface ApiInfo {
++public @interface EmptyString {
+ }

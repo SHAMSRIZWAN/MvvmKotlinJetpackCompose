@@ -19,20 +19,40 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mvvmKotlinJetpackCompose.R
 import com.example.mvvmKotlinJetpackCompose.data.network.Success
+import com.example.mvvmKotlinJetpackCompose.di.login.LoginComponentManager
+import com.example.mvvmKotlinJetpackCompose.di.login.LoginEntryPoint
+import com.example.mvvmKotlinJetpackCompose.ui.ViewModelFactory
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseComponentActivity
 import com.example.mvvmKotlinJetpackCompose.ui.dashboard.DashboardActivity
 import com.example.mvvmKotlinJetpackCompose.ui.login.LoginActivity
+import com.example.mvvmKotlinJetpackCompose.data.repos.LoginRepository
 import com.example.mvvmKotlinJetpackCompose.ui.theme.CoinTheme
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import com.example.mvvmKotlinJetpackCompose.util.observeEvent
+import dagger.hilt.EntryPoints
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ExperimentalFoundationApi
 @AndroidEntryPoint
 class SplashActivity : BaseComponentActivity<SplashViewModel>() {
 
-    override val viewModel: SplashViewModel by viewModels()
-
     override val wantToShowCustomLoading=true
+
+    @Inject
+    lateinit var loginComponentManager: LoginComponentManager
+
+    private lateinit var loginRepository: LoginRepository
+
+    override val viewModel: SplashViewModel by viewModels {
+        loginRepository = EntryPoints.get(
+            loginComponentManager.getComponent(),
+            LoginEntryPoint::class.java
+        ).getLoginRepo()
+        ViewModelFactory(loginRepository)
+
+    }
+
 
     @Composable
     override fun ProvideCompose() {

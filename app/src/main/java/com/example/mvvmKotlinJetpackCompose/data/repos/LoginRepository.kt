@@ -1,4 +1,4 @@
-package com.example.mvvmKotlinJetpackCompose.ui.login
+package com.example.mvvmKotlinJetpackCompose.data.repos
 
 import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
 import com.example.mvvmKotlinJetpackCompose.data.network.DataError
@@ -7,16 +7,20 @@ import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.di.login.LoginScope
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.AppDispatcherProvider
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 @LoginScope
-class LoginRepo @Inject constructor(
+class LoginRepository @Inject constructor(
+    appDispatcherProvider: DispatcherProvider,
     apiHelper: ApiHelper,
     preferencesHelper: PreferencesHelper,
-) : BaseRepository(apiHelper, preferencesHelper) {
+) : BaseRepository(appDispatcherProvider,apiHelper, preferencesHelper) {
 
     fun login(email: String, password: String): Flow<Resource<LoginResponse>> {
         val loginResult = getApiHelper().login(email, password)
@@ -47,7 +51,7 @@ class LoginRepo @Inject constructor(
 
         return flow {
             emit(loginResult)
-        }
+        }.flowOn(getAppDispatcher().io())
     }
 
     suspend fun isUserLoggedIn(): Flow<Int?> {
@@ -56,7 +60,7 @@ class LoginRepo @Inject constructor(
             delay(3000)
 
             emit(getPreferencesHelper().getCurrentUserLoggedInMode())
-        }
+        } .flowOn(getAppDispatcher().computation())
     }
 
 

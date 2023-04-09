@@ -6,22 +6,26 @@ import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.util.NO_INTERNET_CONNECTION
 import com.example.mvvmKotlinJetpackCompose.TestDataClassGenerator
+import com.example.mvvmKotlinJetpackCompose.data.repos.LoginRepository
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.TestDispatcherProvider
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class LoginRepoTest {
+class LoginRepositoryTest {
 
 
     lateinit var apiHelper: ApiHelper
 
     lateinit var preferencesHelper: PreferencesHelper
 
-    lateinit var repoUnderTest: LoginRepo
+    lateinit var repoUnderTest: LoginRepository
 
     protected val testDataClassGenerator: TestDataClassGenerator = TestDataClassGenerator()
 
@@ -29,7 +33,8 @@ class LoginRepoTest {
     fun setTup() {
         apiHelper = mockk(relaxUnitFun = true)
         preferencesHelper = mockk(relaxUnitFun = true)
-        repoUnderTest = LoginRepo(apiHelper, preferencesHelper)
+        val appDispatcher = TestDispatcherProvider()
+        repoUnderTest = LoginRepository(appDispatcher,apiHelper, preferencesHelper)
 
     }
 
@@ -48,13 +53,13 @@ class LoginRepoTest {
         //when
         var result: Resource<LoginResponse>? = null
 
-        runBlockingTest  {
+        runBlocking  {
             result =  repoUnderTest.login("", "").first()
         }
 
         //then
         assertEquals(true, result!!.data!!.status)
-        verify {
+        verify (exactly = 1){
 
             preferencesHelper.setUserLoggedIn(
                 result!!.data!!.data.userId,
@@ -113,7 +118,7 @@ class LoginRepoTest {
 
         //when
         var result: Resource<LoginResponse>? = null
-        runBlockingTest  {
+        runBlocking  {
             result =  repoUnderTest.login("", "").first()
         }
 

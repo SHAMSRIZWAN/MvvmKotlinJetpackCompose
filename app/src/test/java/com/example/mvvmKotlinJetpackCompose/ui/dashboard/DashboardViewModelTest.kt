@@ -1,40 +1,55 @@
 package com.example.mvvmKotlinJetpackCompose.ui.dashboard
 
-import com.example.mvvmKotlinJetpackCompose.BaseTest
-import com.example.mvvmKotlinJetpackCompose.data.network.Resource
-import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
-import com.example.mvvmKotlinJetpackCompose.data.network.model.LoginResponse
-import com.example.mvvmKotlinJetpackCompose.util.NO_INTERNET_CONNECTION
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.mvvmKotlinJetpackCompose.BaseViewModelRepositoryTest
+import com.example.mvvmKotlinJetpackCompose.BaseViewModelUseCaseTest
+import com.example.mvvmKotlinJetpackCompose.TestDataClassGenerator
+import com.example.mvvmKotlinJetpackCompose.data.repos.DashboardRepository
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.CoroutineTestRule
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.TestDispatcherProvider
 import io.mockk.*
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
-import org.junit.Assert
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
-class DashboardViewModelTest : BaseTest<DashboardViewModel, DashboardRepo>() {
+class DashboardViewModelTest {
+    protected val testDataClassGenerator: TestDataClassGenerator = TestDataClassGenerator()
 
+    lateinit var viewModelUnderTest: DashboardViewModel
+
+    lateinit var dashboardUseCase: DashboardUseCase
 
     @ExperimentalCoroutinesApi
-    override fun setUp() {
-        repository = mockk(relaxUnitFun = true)
-        viewModelUnderTest = DashboardViewModel(repository, appDispatcher)
+    @get:Rule
+    open val mainCoroutineRule = CoroutineTestRule()
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    @Before
+    fun setUp() {
+        dashboardUseCase = mockk<DashboardUseCase>()
+        viewModelUnderTest = DashboardViewModel(dashboardUseCase)
     }
 
 
     @Test
-    fun `dashboard,success full response,return success`() {
+    fun `dashboard,success full response,return success`() = runBlocking{
 
         //Given
         val response = testDataClassGenerator.getSuccessDashboardResponse();
-        val userId="123"
+        val userId = "123"
 
         coEvery {
-            repository.getDashboardData()
+            dashboardUseCase.getDashboardData()
         } returns response
         every {
-            repository.getUserId()
-        }returns userId
+            dashboardUseCase.getUserId()
+        } returns userId
 
         //when
         viewModelUnderTest.getDashBoarData()
@@ -47,13 +62,13 @@ class DashboardViewModelTest : BaseTest<DashboardViewModel, DashboardRepo>() {
     }
 
 
-
-
     @Test
     fun `on logout,logout method call,return success`() {
 
         //Given
-
+        justRun  {
+            dashboardUseCase.logout()
+        }
         //when
         viewModelUnderTest.logout()
 

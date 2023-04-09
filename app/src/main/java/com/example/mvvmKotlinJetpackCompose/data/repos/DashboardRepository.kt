@@ -1,23 +1,28 @@
-package com.example.mvvmKotlinJetpackCompose.ui.dashboard
+package com.example.mvvmKotlinJetpackCompose.data.repos
 
 import com.example.mvvmKotlinJetpackCompose.data.network.ApiHelper
 import com.example.mvvmKotlinJetpackCompose.data.network.Resource
-import com.example.mvvmKotlinJetpackCompose.data.network.Success
 import com.example.mvvmKotlinJetpackCompose.data.network.model.DashboardResponse
 import com.example.mvvmKotlinJetpackCompose.data.prefs.PreferencesHelper
 import com.example.mvvmKotlinJetpackCompose.ui.base.BaseRepository
 import com.example.mvvmKotlinJetpackCompose.util.LoggedInMode
-import kotlinx.coroutines.flow.Flow
+import com.example.mvvmKotlinJetpackCompose.util.coroutines.DispatcherProvider
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class DashboardRepo @Inject constructor(
+class DashboardRepository @Inject constructor(
+    appDispatcher: DispatcherProvider,
     apiHelper: ApiHelper,
     preferencesHelper: PreferencesHelper,
-) : BaseRepository(apiHelper, preferencesHelper) {
+) : BaseRepository(appDispatcher,apiHelper, preferencesHelper) {
 
     fun logout() {
-        setUserAsLoggedOut()
+
+        flow<Unit> {
+            setUserAsLoggedOut()
+        }.flowOn(getAppDispatcher().computation())
+
     }
 
     suspend fun getDashboardData(): Resource<DashboardResponse> {

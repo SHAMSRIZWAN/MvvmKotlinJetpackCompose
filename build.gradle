@@ -8,6 +8,7 @@ buildscript {
         moshiVersion = '1.14.0'
         okhttpInterceptorVersion = '4.9.1'
         hilt_version ='2.44.2'
+        room_version = "2.5.0"
     }
     repositories {
         google()
