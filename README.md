@@ -107,4 +107,8 @@ ii)when the requirement is changed (then you have to change test cases as well)
 Don't pass context in viewmodel it makes it easier to test
 
 
+## License
 
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - see the [LICENSE](LICENSE) file for details.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
